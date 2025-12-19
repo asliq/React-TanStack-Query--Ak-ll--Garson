@@ -28,6 +28,7 @@ import {
 } from 'lucide-react'
 import { Card, CardContent } from '../components/ui/Card'
 import { Skeleton } from '../components/ui/Skeleton'
+import { RealtimeChart } from '../components/RealtimeChart'
 import { useStats } from '../hooks/useStats'
 import { useTables } from '../hooks/useTables'
 import { useOrders } from '../hooks/useOrders'
@@ -264,6 +265,11 @@ export default function Dashboard() {
           </motion.div>
         ))}
       </div>
+
+      {/* Realtime Chart - İleri Teknoloji */}
+      <motion.div variants={item} className={styles.realtimeSection}>
+        <RealtimeChart />
+      </motion.div>
 
       {/* Ana İçerik - 3 Sütun */}
       <div className={styles.mainGrid}>
