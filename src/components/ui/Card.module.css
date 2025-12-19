@@ -1,0 +1,74 @@
+/* Card Base */
+.card {
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+  transition: all var(--transition-fast);
+  overflow: hidden;
+}
+
+/* Variants */
+.default {
+  /* Default styles */
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.elevated {
+  box-shadow: var(--shadow-lg);
+}
+
+.outlined {
+  background: transparent;
+  border: 2px solid var(--border-medium);
+  box-shadow: none;
+}
+
+.gradient {
+  background: var(--gradient-subtle);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Glow Effect */
+.glow {
+  box-shadow: var(--shadow-card), var(--shadow-glow);
+}
+
+/* Card Header */
+.header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Card Title */
+.title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+/* Card Description */
+.description {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* Card Content */
+.content {
+  padding: 1.25rem 1.5rem;
+}
+
+/* Card Footer */
+.footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-tertiary);
+}

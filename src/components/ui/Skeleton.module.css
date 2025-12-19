@@ -1,0 +1,67 @@
+/* ==========================================
+   SKELETON - Modern Light Theme
+   ========================================== */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-tertiary) 25%,
+    var(--bg-hover) 50%,
+    var(--bg-tertiary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 12px;
+}
+
+.skeletonText {
+  height: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.skeletonTextSmall {
+  height: 0.75rem;
+}
+
+.skeletonTextLarge {
+  height: 1.5rem;
+}
+
+.skeletonCircle {
+  border-radius: 50%;
+}
+
+.skeletonCard {
+  border-radius: 20px;
+}
+
+.skeletonButton {
+  border-radius: 12px;
+  height: 44px;
+}
+
+.skeletonAvatar {
+  border-radius: 14px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Container for multiple skeletons */
+.skeletonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
