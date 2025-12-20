@@ -29,6 +29,7 @@ import {
 import { Card, CardContent } from '../components/ui/Card'
 import { Skeleton } from '../components/ui/Skeleton'
 import { RealtimeChart } from '../components/RealtimeChart'
+import { useTranslation } from '../hooks/useTranslation'
 import { useStats } from '../hooks/useStats'
 import { useTables } from '../hooks/useTables'
 import { useOrders } from '../hooks/useOrders'
@@ -72,6 +73,7 @@ const getTimeAgo = (dateString) => {
 
 export default function Dashboard() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const { data: stats, isLoading: statsLoading, refetch: refetchStats } = useStats()
   const { data: tables, isLoading: tablesLoading } = useTables()
   const { data: orders, isLoading: ordersLoading, refetch: refetchOrders } = useOrders()
@@ -217,8 +219,8 @@ export default function Dashboard() {
       {/* Header */}
       <motion.div className={styles.dashboardHeader} variants={item}>
         <div className={styles.greeting}>
-          <h1>Merhaba{activeWaiter?.name ? `, ${activeWaiter.name.split(' ')[0]}` : ''} 👋</h1>
-          <p>İşte bugünün özeti</p>
+          <h1>{t('dashboard.greeting')}{activeWaiter?.name ? `, ${activeWaiter.name.split(' ')[0]}` : ''} 👋</h1>
+          <p>{t('dashboard.todaySummary')}</p>
         </div>
         <div className={styles.headerActions}>
           <span className={styles.currentTime}>
@@ -562,3 +564,4 @@ export default function Dashboard() {
     </motion.div>
   )
 }
+ 
