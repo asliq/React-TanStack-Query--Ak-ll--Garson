@@ -1,7 +1,7 @@
 {
   "tables": [
     {
-      "id": 1,
+      "id": "1",
       "number": 1,
       "capacity": 4,
       "status": "available",
@@ -9,7 +9,7 @@
       "waiterId": 1
     },
     {
-      "id": 2,
+      "id": "2",
       "number": 2,
       "capacity": 2,
       "status": "occupied",
@@ -17,7 +17,7 @@
       "waiterId": 1
     },
     {
-      "id": 3,
+      "id": "3",
       "number": 3,
       "capacity": 6,
       "status": "reserved",
@@ -25,7 +25,7 @@
       "waiterId": 1
     },
     {
-      "id": 4,
+      "id": "4",
       "number": 4,
       "capacity": 4,
       "status": "available",
@@ -33,7 +33,7 @@
       "waiterId": 1
     },
     {
-      "id": 5,
+      "id": "5",
       "number": 5,
       "capacity": 8,
       "status": "occupied",
@@ -41,7 +41,7 @@
       "waiterId": 2
     },
     {
-      "id": 6,
+      "id": "6",
       "number": 6,
       "capacity": 4,
       "status": "available",
@@ -49,7 +49,7 @@
       "waiterId": 2
     },
     {
-      "id": 7,
+      "id": "7",
       "number": 7,
       "capacity": 2,
       "status": "available",
@@ -57,7 +57,7 @@
       "waiterId": 2
     },
     {
-      "id": 8,
+      "id": "8",
       "number": 8,
       "capacity": 6,
       "status": "reserved",
@@ -65,7 +65,7 @@
       "waiterId": 2
     },
     {
-      "id": 9,
+      "id": "9",
       "number": 9,
       "capacity": 4,
       "status": "available",
@@ -73,7 +73,7 @@
       "waiterId": 3
     },
     {
-      "id": 10,
+      "id": "10",
       "number": 10,
       "capacity": 10,
       "status": "available",
@@ -81,7 +81,7 @@
       "waiterId": 3
     },
     {
-      "id": 11,
+      "id": "11",
       "number": 11,
       "capacity": 8,
       "status": "occupied",
@@ -89,7 +89,7 @@
       "waiterId": 3
     },
     {
-      "id": 12,
+      "id": "12",
       "number": 12,
       "capacity": 6,
       "status": "available",
@@ -99,70 +99,70 @@
   ],
   "categories": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Başlangıçlar",
       "icon": "🥗",
       "color": "#10b981",
       "order": 1
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Ana Yemekler",
       "icon": "🍖",
       "color": "#f59e0b",
       "order": 2
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "Pizzalar",
       "icon": "🍕",
       "color": "#ef4444",
       "order": 3
     },
     {
-      "id": 4,
+      "id": "4",
       "name": "Makarnalar",
       "icon": "🍝",
       "color": "#8b5cf6",
       "order": 4
     },
     {
-      "id": 5,
+      "id": "5",
       "name": "Burgerler",
       "icon": "🍔",
       "color": "#ec4899",
       "order": 5
     },
     {
-      "id": 6,
+      "id": "6",
       "name": "Deniz Ürünleri",
       "icon": "🦐",
       "color": "#0ea5e9",
       "order": 6
     },
     {
-      "id": 7,
+      "id": "7",
       "name": "Tatlılar",
       "icon": "🍰",
       "color": "#06b6d4",
       "order": 7
     },
     {
-      "id": 8,
+      "id": "8",
       "name": "İçecekler",
       "icon": "🥤",
       "color": "#3b82f6",
       "order": 8
     },
     {
-      "id": 9,
+      "id": "9",
       "name": "Kahveler",
       "icon": "☕",
       "color": "#78350f",
       "order": 9
     },
     {
-      "id": 10,
+      "id": "10",
       "name": "Alkollü İçecekler",
       "icon": "🍷",
       "color": "#be123c",
@@ -171,7 +171,7 @@
   ],
   "menuItems": [
     {
-      "id": 1,
+      "id": "1",
       "categoryId": 1,
       "name": "Çoban Salata",
       "description": "Taze domates, salatalık, biber, soğan, zeytinyağı ile",
@@ -183,7 +183,7 @@
       "allergens": []
     },
     {
-      "id": 2,
+      "id": "2",
       "categoryId": 1,
       "name": "Mercimek Çorbası",
       "description": "Geleneksel Türk mercimek çorbası, limon ve kruton ile",
@@ -197,7 +197,7 @@
       ]
     },
     {
-      "id": 3,
+      "id": "3",
       "categoryId": 1,
       "name": "Humus",
       "description": "Tahin, nohut, zeytinyağı, pide eşliğinde",
@@ -211,7 +211,7 @@
       ]
     },
     {
-      "id": 4,
+      "id": "4",
       "categoryId": 1,
       "name": "Sigara Böreği",
       "description": "Peynirli, el açması, 4 adet",
@@ -226,7 +226,7 @@
       ]
     },
     {
-      "id": 5,
+      "id": "5",
       "categoryId": 2,
       "name": "Izgara Köfte",
       "description": "El yapımı köfte, pilav, salata ve közlenmiş biber ile",
@@ -240,7 +240,7 @@
       ]
     },
     {
-      "id": 6,
+      "id": "6",
       "categoryId": 2,
       "name": "Tavuk Şiş",
       "description": "Marine edilmiş tavuk göğsü, sebze ve pilav ile",
@@ -252,7 +252,7 @@
       "allergens": []
     },
     {
-      "id": 7,
+      "id": "7",
       "categoryId": 2,
       "name": "Kuzu Pirzola",
       "description": "Fırında pişmiş kuzu pirzola, patates pure ile",
@@ -266,7 +266,7 @@
       ]
     },
     {
-      "id": 8,
+      "id": "8",
       "categoryId": 2,
       "name": "Adana Kebap",
       "description": "Acılı kıyma kebabı, lavaş ve közlenmiş sebzeler ile",
@@ -280,7 +280,7 @@
       ]
     },
     {
-      "id": 9,
+      "id": "9",
       "categoryId": 3,
       "name": "Margherita Pizza",
       "description": "Domates sos, mozzarella, taze fesleğen",
@@ -295,7 +295,7 @@
       ]
     },
     {
-      "id": 10,
+      "id": "10",
       "categoryId": 3,
       "name": "Karışık Pizza",
       "description": "Sucuk, sosis, mantar, biber, zeytin, mozzarella",
@@ -310,7 +310,7 @@
       ]
     },
     {
-      "id": 11,
+      "id": "11",
       "categoryId": 3,
       "name": "Pepperoni Pizza",
       "description": "Bol pepperoni, mozzarella, domates sos",
@@ -325,7 +325,7 @@
       ]
     },
     {
-      "id": 12,
+      "id": "12",
       "categoryId": 4,
       "name": "Fettuccine Alfredo",
       "description": "Kremalı parmesan soslu fettuccine",
@@ -340,7 +340,7 @@
       ]
     },
     {
-      "id": 13,
+      "id": "13",
       "categoryId": 4,
       "name": "Bolonez Spagetti",
       "description": "Kıymalı domates soslu spagetti, parmesan ile",
@@ -355,7 +355,7 @@
       ]
     },
     {
-      "id": 14,
+      "id": "14",
       "categoryId": 4,
       "name": "Penne Arrabbiata",
       "description": "Acılı domates soslu penne",
@@ -369,7 +369,7 @@
       ]
     },
     {
-      "id": 15,
+      "id": "15",
       "categoryId": 5,
       "name": "Klasik Burger",
       "description": "180gr dana eti, cheddar, turşu, özel sos, patates",
@@ -384,7 +384,7 @@
       ]
     },
     {
-      "id": 16,
+      "id": "16",
       "categoryId": 5,
       "name": "Tavuk Burger",
       "description": "Çıtır tavuk, marul, domates, mayonez, patates",
@@ -398,7 +398,7 @@
       ]
     },
     {
-      "id": 17,
+      "id": "17",
       "categoryId": 5,
       "name": "BBQ Burger",
       "description": "200gr dana, bacon, BBQ sos, soğan halkası",
@@ -413,7 +413,7 @@
       ]
     },
     {
-      "id": 18,
+      "id": "18",
       "categoryId": 6,
       "name": "Izgara Somon",
       "description": "Tereyağlı somon, asparagus ve limon ile",
@@ -428,7 +428,7 @@
       ]
     },
     {
-      "id": 19,
+      "id": "19",
       "categoryId": 6,
       "name": "Karides Güveç",
       "description": "Tereyağlı karides, sarımsak, domates sos",
@@ -443,7 +443,7 @@
       ]
     },
     {
-      "id": 20,
+      "id": "20",
       "categoryId": 6,
       "name": "Kalamar Tava",
       "description": "Çıtır kalamar, tartar sos ile",
@@ -458,7 +458,7 @@
       ]
     },
     {
-      "id": 21,
+      "id": "21",
       "categoryId": 7,
       "name": "Çikolatalı Sufle",
       "description": "Sıcak servis, vanilya dondurması ile",
@@ -474,7 +474,7 @@
       ]
     },
     {
-      "id": 22,
+      "id": "22",
       "categoryId": 7,
       "name": "Tiramisu",
       "description": "Geleneksel İtalyan tatlısı",
@@ -490,7 +490,7 @@
       ]
     },
     {
-      "id": 23,
+      "id": "23",
       "categoryId": 7,
       "name": "Cheesecake",
       "description": "New York usulü, çilek sos ile",
@@ -505,7 +505,7 @@
       ]
     },
     {
-      "id": 24,
+      "id": "24",
       "categoryId": 7,
       "name": "Künefe",
       "description": "Antep fıstıklı, kaymak ile",
@@ -521,7 +521,7 @@
       ]
     },
     {
-      "id": 25,
+      "id": "25",
       "categoryId": 8,
       "name": "Taze Sıkılmış Portakal",
       "description": "300ml, taze sıkım",
@@ -533,7 +533,7 @@
       "allergens": []
     },
     {
-      "id": 26,
+      "id": "26",
       "categoryId": 8,
       "name": "Limonata",
       "description": "Ev yapımı, taze nane ile",
@@ -545,7 +545,7 @@
       "allergens": []
     },
     {
-      "id": 27,
+      "id": "27",
       "categoryId": 8,
       "name": "Mojito (Alkolsüz)",
       "description": "Nane, lime, soda",
@@ -557,7 +557,7 @@
       "allergens": []
     },
     {
-      "id": 28,
+      "id": "28",
       "categoryId": 9,
       "name": "Türk Kahvesi",
       "description": "Geleneksel pişirme, lokum ile",
@@ -569,7 +569,7 @@
       "allergens": []
     },
     {
-      "id": 29,
+      "id": "29",
       "categoryId": 9,
       "name": "Latte",
       "description": "Espresso, sütlü köpük",
@@ -583,7 +583,7 @@
       ]
     },
     {
-      "id": 30,
+      "id": "30",
       "categoryId": 9,
       "name": "Cappuccino",
       "description": "Espresso, buharla ısıtılmış süt",
@@ -597,7 +597,7 @@
       ]
     },
     {
-      "id": 31,
+      "id": "31",
       "categoryId": 10,
       "name": "Ev Şarabı (Kadeh)",
       "description": "Kırmızı veya beyaz",
@@ -611,7 +611,7 @@
       ]
     },
     {
-      "id": 32,
+      "id": "32",
       "categoryId": 10,
       "name": "Bira",
       "description": "Yerli veya ithal, 500ml",
@@ -627,7 +627,7 @@
   ],
   "orders": [
     {
-      "id": 1,
+      "id": "1",
       "tableId": 2,
       "waiterId": 1,
       "items": [
@@ -653,7 +653,7 @@
       "notes": ""
     },
     {
-      "id": 2,
+      "id": "2",
       "tableId": 5,
       "waiterId": 2,
       "items": [
@@ -685,7 +685,7 @@
       "notes": "VIP müşteri"
     },
     {
-      "id": 3,
+      "id": "3",
       "tableId": 11,
       "waiterId": 3,
       "items": [
@@ -738,7 +738,7 @@
   ],
   "reservations": [
     {
-      "id": 1,
+      "id": "1",
       "tableId": 3,
       "customerName": "Ahmet Yılmaz",
       "customerPhone": "0532 123 4567",
@@ -752,7 +752,7 @@
       "createdAt": "2024-12-18T14:00:00Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "tableId": 8,
       "customerName": "Ayşe Demir",
       "customerPhone": "0533 987 6543",
@@ -766,7 +766,7 @@
       "createdAt": "2024-12-17T10:00:00Z"
     },
     {
-      "id": 3,
+      "id": "3",
       "tableId": 10,
       "customerName": "Mehmet Kaya",
       "customerPhone": "0542 555 1234",
@@ -775,12 +775,12 @@
       "date": "2024-12-20",
       "time": "13:00",
       "duration": 180,
-      "status": "pending",
+      "status": "confirmed",
       "notes": "İş yemeği",
       "createdAt": "2024-12-19T09:00:00Z"
     },
     {
-      "id": 4,
+      "id": "4",
       "tableId": 6,
       "customerName": "Zeynep Aksoy",
       "customerPhone": "0555 444 3333",
@@ -796,7 +796,7 @@
   ],
   "payments": [
     {
-      "id": 1,
+      "id": "1",
       "orderId": 2,
       "tableId": 5,
       "amount": 580,
@@ -809,7 +809,7 @@
   ],
   "waiters": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Ahmet Yılmaz",
       "avatar": "👨‍🍳",
       "email": "ahmet@restaurant.com",
@@ -825,7 +825,7 @@
       "salesTotal": 4520
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Ayşe Demir",
       "avatar": "👩‍🍳",
       "email": "ayse@restaurant.com",
@@ -841,7 +841,7 @@
       "salesTotal": 6780
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "Mehmet Kaya",
       "avatar": "👨‍🍳",
       "email": "mehmet@restaurant.com",
@@ -859,7 +859,7 @@
   ],
   "notifications": [
     {
-      "id": 1,
+      "id": "1",
       "type": "order",
       "title": "Yeni Sipariş",
       "message": "Masa 2'den yeni sipariş geldi",
@@ -867,7 +867,7 @@
       "createdAt": "2024-12-19T10:30:00Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "type": "kitchen",
       "title": "Sipariş Hazır",
       "message": "Masa 5 siparişi servise hazır",
@@ -875,7 +875,7 @@
       "createdAt": "2024-12-19T10:15:00Z"
     },
     {
-      "id": 3,
+      "id": "3",
       "type": "reservation",
       "title": "Yeni Rezervasyon",
       "message": "20 Aralık için yeni rezervasyon",
@@ -885,7 +885,7 @@
   ],
   "kitchenOrders": [
     {
-      "id": 1,
+      "id": "1",
       "orderId": 1,
       "items": [
         {
@@ -893,8 +893,9 @@
           "name": "Izgara Köfte",
           "quantity": 2,
           "notes": "Az tuzlu",
-          "status": "preparing",
-          "startedAt": "2024-12-19T10:32:00Z"
+          "status": "ready",
+          "startedAt": "2024-12-19T10:32:00Z",
+          "completedAt": "2025-12-21T14:22:28.651Z"
         }
       ],
       "priority": "normal",
@@ -902,7 +903,7 @@
       "createdAt": "2024-12-19T10:30:00Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "orderId": 3,
       "items": [
         {
@@ -933,54 +934,61 @@
       "orders": 42,
       "revenue": 11250,
       "avgOrderValue": 268,
-      "topCategory": "Ana Yemekler"
+      "topCategory": "Ana Yemekler",
+      "id": "8923"
     },
     {
       "date": "2024-12-14",
       "orders": 56,
       "revenue": 15680,
       "avgOrderValue": 280,
-      "topCategory": "Pizzalar"
+      "topCategory": "Pizzalar",
+      "id": "dde1"
     },
     {
       "date": "2024-12-15",
       "orders": 48,
       "revenue": 13420,
       "avgOrderValue": 280,
-      "topCategory": "Ana Yemekler"
+      "topCategory": "Ana Yemekler",
+      "id": "f8e2"
     },
     {
       "date": "2024-12-16",
       "orders": 38,
       "revenue": 9850,
       "avgOrderValue": 259,
-      "topCategory": "Burgerler"
+      "topCategory": "Burgerler",
+      "id": "ad40"
     },
     {
       "date": "2024-12-17",
       "orders": 51,
       "revenue": 14200,
       "avgOrderValue": 278,
-      "topCategory": "Ana Yemekler"
+      "topCategory": "Ana Yemekler",
+      "id": "9e2f"
     },
     {
       "date": "2024-12-18",
       "orders": 62,
       "revenue": 17890,
       "avgOrderValue": 289,
-      "topCategory": "Deniz Ürünleri"
+      "topCategory": "Deniz Ürünleri",
+      "id": "3cf6"
     },
     {
       "date": "2024-12-19",
       "orders": 45,
       "revenue": 12450,
       "avgOrderValue": 277,
-      "topCategory": "Ana Yemekler"
+      "topCategory": "Ana Yemekler",
+      "id": "71c6"
     }
   ],
   "inventory": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Dana Kıyma",
       "unit": "kg",
       "quantity": 25,
@@ -989,7 +997,7 @@
       "category": "Et"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Tavuk Göğsü",
       "unit": "kg",
       "quantity": 18,
@@ -998,7 +1006,7 @@
       "category": "Et"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "Kuzu Pirzola",
       "unit": "kg",
       "quantity": 8,
@@ -1007,7 +1015,7 @@
       "category": "Et"
     },
     {
-      "id": 4,
+      "id": "4",
       "name": "Somon",
       "unit": "kg",
       "quantity": 6,
@@ -1016,7 +1024,7 @@
       "category": "Deniz Ürünü"
     },
     {
-      "id": 5,
+      "id": "5",
       "name": "Mozzarella",
       "unit": "kg",
       "quantity": 12,
@@ -1025,7 +1033,7 @@
       "category": "Süt Ürünü"
     },
     {
-      "id": 6,
+      "id": "6",
       "name": "Domates",
       "unit": "kg",
       "quantity": 30,
@@ -1034,7 +1042,7 @@
       "category": "Sebze"
     },
     {
-      "id": 7,
+      "id": "7",
       "name": "Soğan",
       "unit": "kg",
       "quantity": 20,
@@ -1043,7 +1051,7 @@
       "category": "Sebze"
     },
     {
-      "id": 8,
+      "id": "8",
       "name": "Zeytinyağı",
       "unit": "lt",
       "quantity": 15,
