@@ -1,34 +1,16 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
 import { 
   TrendingUp, 
   TrendingDown,
   Clock, 
-  Star, 
   DollarSign,
-  ChefHat,
-  Users,
-  Utensils,
-  AlertCircle,
-  Bell,
-  ArrowRight,
-  CheckCircle,
-  XCircle,
-  Coffee,
   ShoppingBag,
-  Calendar,
-  Activity,
-  Zap,
-  Award,
-  Target,
-  BarChart3,
-  PieChart,
-  RefreshCw
+  CheckCircle,
+  RefreshCw,
+  Users,
+  Plus
 } from 'lucide-react'
-import { Card, CardContent } from '../components/ui/Card'
-import { Skeleton } from '../components/ui/Skeleton'
-import { RealtimeChart } from '../components/RealtimeChart'
 import { useTranslation } from '../hooks/useTranslation'
 import { useStats } from '../hooks/useStats'
 import { useTables } from '../hooks/useTables'
@@ -37,20 +19,14 @@ import { useMenuItems } from '../hooks/useMenu'
 import { useAppStore } from '../store/useAppStore'
 import styles from './Dashboard.module.css'
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08 }
-  }
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('tr-TR', { 
+    style: 'currency', 
+    currency: 'TRY',
+    minimumFractionDigits: 0
+  }).format(value)
 }
 
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 }
-}
-
-// Saat formatı
 const formatTime = (date) => {
   return new Date(date).toLocaleTimeString('tr-TR', { 
     hour: '2-digit', 
@@ -58,7 +34,6 @@ const formatTime = (date) => {
   })
 }
 
-// Zaman farkı
 const getTimeAgo = (dateString) => {
   const now = new Date()
   const date = new Date(dateString)
@@ -74,15 +49,12 @@ const getTimeAgo = (dateString) => {
 export default function Dashboard() {
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const { data: stats, isLoading: statsLoading, refetch: refetchStats } = useStats()
-  const { data: tables, isLoading: tablesLoading } = useTables()
-  const { data: orders, isLoading: ordersLoading, refetch: refetchOrders } = useOrders()
+  const { data: stats } = useStats()
+  const { data: tables } = useTables()
+  const { data: orders, refetch: refetchOrders } = useOrders()
   const { data: menuItems } = useMenuItems()
   const activeWaiter = useAppStore((state) => state.activeWaiter)
-
   const [isRefreshing, setIsRefreshing] = useState(false)
-
-  const isLoading = statsLoading || tablesLoading || ordersLoading
 
   // İstatistikleri hesapla
   const dashboardStats = useMemo(() => {
@@ -95,473 +67,275 @@ export default function Dashboard() {
     const activeOrders = orders.filter(o => 
       ['pending', 'preparing', 'ready'].includes(o.status)
     )
-    const pendingOrders = orders.filter(o => o.status === 'pending').length
-    const preparingOrders = orders.filter(o => o.status === 'preparing').length
-    const readyOrders = orders.filter(o => o.status === 'ready').length
-    const completedToday = orders.filter(o => o.status === 'served').length
-    
-    const totalRevenue = orders
-      .filter(o => ['served', 'paid'].includes(o.status))
-      .reduce((sum, o) => sum + o.totalAmount, 0)
 
-    // En çok satan ürünler
-    const itemSales = {}
-    orders.forEach(order => {
-      order.items?.forEach(item => {
-        if (!itemSales[item.menuItemId]) {
-          itemSales[item.menuItemId] = 0
-        }
-        itemSales[item.menuItemId] += item.quantity
-      })
+    const todayOrders = orders.filter(o => {
+      const orderDate = new Date(o.createdAt)
+      const today = new Date()
+      return orderDate.toDateString() === today.toDateString()
     })
 
-    const topItems = Object.entries(itemSales)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-      .map(([id, count]) => ({
-        item: menuItems?.find(m => m.id === id),
-        count
-      }))
-      .filter(x => x.item)
-
-    // Doluluk oranı
-    const occupancyRate = tables.length > 0 
-      ? Math.round((occupiedTables / tables.length) * 100) 
-      : 0
+    const todayRevenue = todayOrders.reduce((sum, order) => sum + order.total, 0)
+    const completedToday = todayOrders.filter(o => o.status === 'completed').length
+    const avgOrderValue = todayOrders.length > 0 ? todayRevenue / todayOrders.length : 0
 
     return {
       availableTables,
       occupiedTables,
       reservedTables,
-      totalTables: tables.length,
-      activeOrders: activeOrders.length,
-      pendingOrders,
-      preparingOrders,
-      readyOrders,
+      activeOrders,
+      todayRevenue,
       completedToday,
-      totalRevenue,
-      topItems,
-      occupancyRate,
-      recentOrders: activeOrders.slice(0, 6)
+      avgOrderValue,
+      totalTables: tables.length
     }
-  }, [tables, orders, menuItems])
+  }, [tables, orders])
 
-  // Yenile
+  // Popüler ürünler
+  const popularItems = useMemo(() => {
+    if (!orders || !menuItems) return []
+
+    const itemCounts = {}
+    orders.forEach(order => {
+      order.items.forEach(item => {
+        if (!itemCounts[item.menuItemId]) {
+          itemCounts[item.menuItemId] = {
+            count: 0,
+            revenue: 0
+          }
+        }
+        itemCounts[item.menuItemId].count += item.quantity
+        itemCounts[item.menuItemId].revenue += item.price * item.quantity
+      })
+    })
+
+    return Object.entries(itemCounts)
+      .map(([id, data]) => {
+        const menuItem = menuItems.find(m => m.id === parseInt(id))
+        return menuItem ? { ...menuItem, ...data } : null
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5)
+  }, [orders, menuItems])
+
   const handleRefresh = async () => {
     setIsRefreshing(true)
-    await Promise.all([refetchStats(), refetchOrders()])
-    setTimeout(() => setIsRefreshing(false), 500)
+    await refetchOrders()
+    setTimeout(() => setIsRefreshing(false), 1000)
   }
 
-  // Stat kartları
-  const statCards = [
-    {
-      title: 'Günlük Gelir',
-      value: `₺${(dashboardStats?.totalRevenue || stats?.todayRevenue || 0).toLocaleString('tr-TR')}`,
-      icon: DollarSign,
-      color: 'gold',
-      trend: '+12%',
-      trendUp: true,
-      subtitle: 'Bugün'
-    },
-    {
-      title: 'Tamamlanan',
-      value: dashboardStats?.completedToday || stats?.todayOrders || 0,
-      icon: CheckCircle,
-      color: 'emerald',
-      trend: '+8',
-      trendUp: true,
-      subtitle: 'Sipariş'
-    },
-    {
-      title: 'Aktif Sipariş',
-      value: dashboardStats?.activeOrders || 0,
-      icon: Activity,
-      color: 'sapphire',
-      trend: dashboardStats?.pendingOrders > 0 ? `${dashboardStats.pendingOrders} bekliyor` : 'Tümü hazır',
-      trendUp: dashboardStats?.pendingOrders === 0,
-      subtitle: 'Şu an'
-    },
-    {
-      title: 'Doluluk',
-      value: `%${dashboardStats?.occupancyRate || 0}`,
-      icon: Target,
-      color: 'amethyst',
-      trend: `${dashboardStats?.occupiedTables || 0}/${dashboardStats?.totalTables || 0}`,
-      trendUp: true,
-      subtitle: 'Masa'
-    },
-  ]
-
-  if (isLoading) {
-    return (
-      <div className={styles.dashboard}>
-        <div className={styles.statsGrid}>
-          {[1, 2, 3, 4].map(i => (
-            <Skeleton key={i} height="140px" borderRadius="20px" />
-          ))}
-        </div>
-        <div className={styles.mainGrid}>
-          <Skeleton height="400px" borderRadius="20px" />
-          <Skeleton height="400px" borderRadius="20px" />
-        </div>
-      </div>
-    )
+  if (!dashboardStats) {
+    return <div className={styles.dashboard}>Yükleniyor...</div>
   }
 
   return (
-    <motion.div 
-      className={styles.dashboard}
-      variants={container}
-      initial="hidden"
-      animate="show"
-    >
+    <div className={styles.dashboard}>
       {/* Header */}
-      <motion.div className={styles.dashboardHeader} variants={item}>
+      <div className={styles.dashboardHeader}>
         <div className={styles.greeting}>
           <h1>{t('dashboard.greeting')}{activeWaiter?.name ? `, ${activeWaiter.name.split(' ')[0]}` : ''} 👋</h1>
           <p>{t('dashboard.todaySummary')}</p>
         </div>
         <div className={styles.headerActions}>
-          <span className={styles.currentTime}>
+          <div className={styles.currentTime}>
             <Clock size={16} />
             {new Date().toLocaleDateString('tr-TR', { 
               weekday: 'long', 
               day: 'numeric', 
               month: 'long' 
             })}
-          </span>
-          <motion.button 
+          </div>
+          <button 
             className={`${styles.refreshBtn} ${isRefreshing ? styles.spinning : ''}`}
             onClick={handleRefresh}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
             <RefreshCw size={18} />
-          </motion.button>
+          </button>
         </div>
-      </motion.div>
+      </div>
 
-      {/* İstatistik Kartları */}
+      {/* Stats Grid */}
       <div className={styles.statsGrid}>
-        {statCards.map((stat, index) => (
-          <motion.div key={stat.title} variants={item}>
-            <Card className={`${styles.statCard} ${styles[stat.color]}`}>
-              <CardContent className={styles.statContent}>
-                <div className={styles.statHeader}>
-                  <div className={styles.statIcon}>
-                    <stat.icon size={22} />
-                  </div>
-                  <div className={`${styles.trend} ${stat.trendUp ? styles.up : styles.down}`}>
-                    {stat.trendUp ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-                    <span>{stat.trend}</span>
-                  </div>
-                </div>
-                <div className={styles.statInfo}>
-                  <span className={styles.statValue}>{stat.value}</span>
-                  <span className={styles.statTitle}>{stat.title}</span>
-                </div>
-                <span className={styles.statSubtitle}>{stat.subtitle}</span>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
+        {/* Revenue */}
+        <div className={styles.statCard}>
+          <div className={styles.statHeader}>
+            <div>
+              <div className={styles.statLabel}>Toplam Gelir</div>
+              <div className={styles.statValue}>{formatCurrency(dashboardStats.todayRevenue)}</div>
+            </div>
+            <div className={`${styles.statIcon} ${styles.revenue}`}>
+              <DollarSign size={20} />
+            </div>
+          </div>
+          <div className={`${styles.statChange} ${styles.up}`}>
+            <TrendingUp size={14} />
+            <span>+12.5%</span>
+          </div>
+        </div>
+
+        {/* Active Orders */}
+        <div className={styles.statCard}>
+          <div className={styles.statHeader}>
+            <div>
+              <div className={styles.statLabel}>Aktif Siparişler</div>
+              <div className={styles.statValue}>{dashboardStats.activeOrders.length}</div>
+            </div>
+            <div className={`${styles.statIcon} ${styles.orders}`}>
+              <ShoppingBag size={20} />
+            </div>
+          </div>
+          <div className={`${styles.statChange} ${styles.up}`}>
+            <TrendingUp size={14} />
+            <span>+8.2%</span>
+          </div>
+        </div>
+
+        {/* Completed Orders */}
+        <div className={styles.statCard}>
+          <div className={styles.statHeader}>
+            <div>
+              <div className={styles.statLabel}>Tamamlanan</div>
+              <div className={styles.statValue}>{dashboardStats.completedToday}</div>
+            </div>
+            <div className={`${styles.statIcon} ${styles.completed}`}>
+              <CheckCircle size={20} />
+            </div>
+          </div>
+          <div className={`${styles.statChange} ${styles.up}`}>
+            <TrendingUp size={14} />
+            <span>+5.7%</span>
+          </div>
+        </div>
+
+        {/* Average Order */}
+        <div className={styles.statCard}>
+          <div className={styles.statHeader}>
+            <div>
+              <div className={styles.statLabel}>Ort. Sipariş</div>
+              <div className={styles.statValue}>{formatCurrency(dashboardStats.avgOrderValue)}</div>
+            </div>
+            <div className={`${styles.statIcon} ${styles.average}`}>
+              <DollarSign size={20} />
+            </div>
+          </div>
+          <div className={`${styles.statChange} ${styles.down}`}>
+            <TrendingDown size={14} />
+            <span>-2.1%</span>
+          </div>
+        </div>
       </div>
 
-      {/* Realtime Chart - İleri Teknoloji */}
-      <motion.div variants={item} className={styles.realtimeSection}>
-        <RealtimeChart />
-      </motion.div>
-
-      {/* Ana İçerik - 3 Sütun */}
+      {/* Main Grid */}
       <div className={styles.mainGrid}>
-        {/* Sol - Masa Durumu */}
-        <motion.div variants={item} className={styles.tableSection}>
-          <Card className={styles.tableCard}>
-            <CardContent>
-              <div className={styles.sectionHeader}>
-                <div className={styles.sectionTitle}>
-                  <BarChart3 size={20} />
-                  <h3>Masa Durumu</h3>
-                </div>
-                <button 
-                  className={styles.viewAllBtn}
-                  onClick={() => navigate('/tables')}
-                >
-                  Tümü <ArrowRight size={14} />
-                </button>
-              </div>
+        {/* Table Status */}
+        <div className={`${styles.section} ${styles.column4}`}>
+          <div className={styles.sectionHeader}>
+            <h3 className={styles.sectionTitle}>Masa Durumu</h3>
+            <button className={styles.sectionAction} onClick={() => navigate('/tables')}>
+              Tümünü Gör
+            </button>
+          </div>
+          
+          <div className={styles.tableSummary}>
+            <div className={styles.tableSummaryItem}>
+              <div className={styles.tableSummaryValue}>{dashboardStats.availableTables}</div>
+              <div className={styles.tableSummaryLabel}>Boş</div>
+            </div>
+            <div className={styles.tableSummaryItem}>
+              <div className={styles.tableSummaryValue}>{dashboardStats.occupiedTables}</div>
+              <div className={styles.tableSummaryLabel}>Dolu</div>
+            </div>
+            <div className={styles.tableSummaryItem}>
+              <div className={styles.tableSummaryValue}>{dashboardStats.reservedTables}</div>
+              <div className={styles.tableSummaryLabel}>Rezerve</div>
+            </div>
+          </div>
 
-              {/* Mini İstatistikler */}
-              <div className={styles.miniStats}>
-                <div className={`${styles.miniStat} ${styles.available}`}>
-                  <span className={styles.miniValue}>{dashboardStats?.availableTables}</span>
-                  <span className={styles.miniLabel}>Boş</span>
-                </div>
-                <div className={`${styles.miniStat} ${styles.occupied}`}>
-                  <span className={styles.miniValue}>{dashboardStats?.occupiedTables}</span>
-                  <span className={styles.miniLabel}>Dolu</span>
-                </div>
-                <div className={`${styles.miniStat} ${styles.reserved}`}>
-                  <span className={styles.miniValue}>{dashboardStats?.reservedTables}</span>
-                  <span className={styles.miniLabel}>Rezerve</span>
-                </div>
-              </div>
-
-              {/* Masa Grid */}
-              <div className={styles.tableGrid}>
-                {tables?.map((table) => (
-                  <motion.div
-                    key={table.id}
-                    className={`${styles.tableItem} ${styles[table.status]}`}
-                    whileHover={{ scale: 1.08, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => navigate(`/tables/${table.id}/order`)}
-                  >
-                    <span className={styles.tableNumber}>{table.number}</span>
-                    <span className={styles.tableCapacity}>
-                      <Users size={10} /> {table.capacity}
-                    </span>
-                  </motion.div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Orta - Aktif Siparişler */}
-        <motion.div variants={item} className={styles.ordersSection}>
-          <Card className={styles.ordersCard}>
-            <CardContent>
-              <div className={styles.sectionHeader}>
-                <div className={styles.sectionTitle}>
-                  <Activity size={20} />
-                  <h3>Aktif Siparişler</h3>
-                </div>
-                <div className={styles.orderBadges}>
-                  {dashboardStats?.pendingOrders > 0 && (
-                    <span className={`${styles.badge} ${styles.pending}`}>
-                      {dashboardStats.pendingOrders} bekliyor
-                    </span>
-                  )}
-                  {dashboardStats?.readyOrders > 0 && (
-                    <span className={`${styles.badge} ${styles.ready}`}>
-                      {dashboardStats.readyOrders} hazır
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className={styles.ordersList}>
-                <AnimatePresence mode="popLayout">
-                  {dashboardStats?.recentOrders?.map((order, index) => {
-                    const table = tables?.find(t => t.id === order.tableId)
-                    const statusConfig = {
-                      pending: { label: 'Bekliyor', icon: Clock, color: 'warning' },
-                      preparing: { label: 'Hazırlanıyor', icon: ChefHat, color: 'info' },
-                      ready: { label: 'Hazır!', icon: Utensils, color: 'success' },
-                    }
-                    const status = statusConfig[order.status]
-                    
-                    return (
-                      <motion.div 
-                        key={order.id} 
-                        className={`${styles.orderItem} ${styles[order.status]}`}
-                        layout
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 20 }}
-                        transition={{ delay: index * 0.05 }}
-                        onClick={() => navigate('/orders')}
-                      >
-                        <div className={styles.orderLeft}>
-                          <div className={`${styles.orderIcon} ${styles[order.status]}`}>
-                            <status.icon size={16} />
-                          </div>
-                          <div className={styles.orderInfo}>
-                            <span className={styles.orderTable}>
-                              Masa {table?.number || '?'}
-                            </span>
-                            <span className={styles.orderMeta}>
-                              {order.items?.length} ürün • {getTimeAgo(order.createdAt)}
-                            </span>
-                          </div>
-                        </div>
-                        <div className={styles.orderRight}>
-                          <span className={styles.orderAmount}>₺{order.totalAmount}</span>
-                          <span className={`${styles.orderStatus} ${styles[order.status]}`}>
-                            {status.label}
-                          </span>
-                        </div>
-                      </motion.div>
-                    )
-                  })}
-                </AnimatePresence>
-
-                {dashboardStats?.activeOrders === 0 && (
-                  <div className={styles.emptyState}>
-                    <Coffee size={48} />
-                    <p>Şu an aktif sipariş yok</p>
-                    <span>Yeni siparişler burada görünecek</span>
-                  </div>
-                )}
-              </div>
-
-              <button 
-                className={styles.viewOrdersBtn}
-                onClick={() => navigate('/orders')}
+          <div className={styles.tableGrid}>
+            {tables?.slice(0, 12).map(table => (
+              <div
+                key={table.id}
+                className={`${styles.tableItem} ${styles[table.status]}`}
+                onClick={() => navigate(`/tables/${table.id}`)}
               >
-                Tüm Siparişleri Görüntüle
-                <ArrowRight size={16} />
-              </button>
-            </CardContent>
-          </Card>
-        </motion.div>
+                <div className={styles.tableNumber}>{table.number}</div>
+                <div className={styles.tableCapacity}>{table.capacity} kişi</div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-        {/* Sağ - Popüler & Hızlı İşlemler */}
-        <motion.div variants={item} className={styles.rightSection}>
-          {/* En Çok Satan */}
-          <Card className={styles.topItemsCard}>
-            <CardContent>
-              <div className={styles.sectionHeader}>
-                <div className={styles.sectionTitle}>
-                  <Award size={20} />
-                  <h3>En Çok Satan</h3>
+        {/* Active Orders */}
+        <div className={`${styles.section} ${styles.column4}`}>
+          <div className={styles.sectionHeader}>
+            <h3 className={styles.sectionTitle}>Aktif Siparişler</h3>
+            <button className={styles.sectionAction} onClick={() => navigate('/orders')}>
+              Tümünü Gör
+            </button>
+          </div>
+          
+          <div className={styles.ordersList}>
+            {dashboardStats.activeOrders.slice(0, 6).map(order => (
+              <div key={order.id} className={styles.orderItem} onClick={() => navigate(`/orders/${order.id}`)}>
+                <div className={styles.orderTable}>M{order.tableId}</div>
+                <div className={styles.orderDetails}>
+                  <div className={styles.orderNumber}>Sipariş #{order.id}</div>
+                  <div className={styles.orderItems}>{order.items.length} ürün</div>
+                </div>
+                <div className={styles.orderMeta}>
+                  <div className={`${styles.orderStatus} ${styles[order.status]}`}>
+                    {order.status === 'pending' ? 'Bekliyor' : 
+                     order.status === 'preparing' ? 'Hazırlanıyor' : 'Hazır'}
+                  </div>
+                  <div className={styles.orderTime}>{getTimeAgo(order.createdAt)}</div>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
 
-              <div className={styles.topItemsList}>
-                {dashboardStats?.topItems?.map((item, index) => (
-                  <div key={item.item.id} className={styles.topItem}>
-                    <span className={styles.topRank}>#{index + 1}</span>
-                    <img 
-                      src={item.item.image} 
-                      alt={item.item.name}
-                      className={styles.topItemImage}
-                    />
-                    <div className={styles.topItemInfo}>
-                      <span className={styles.topItemName}>{item.item.name}</span>
-                      <span className={styles.topItemCount}>{item.count} adet satıldı</span>
-                    </div>
-                  </div>
-                ))}
-
-                {(!dashboardStats?.topItems || dashboardStats.topItems.length === 0) && (
-                  <div className={styles.emptyTopItems}>
-                    <PieChart size={32} />
-                    <span>Henüz satış verisi yok</span>
-                  </div>
-                )}
+        {/* Popular Items */}
+        <div className={`${styles.section} ${styles.column4}`}>
+          <div className={styles.sectionHeader}>
+            <h3 className={styles.sectionTitle}>Popüler Ürünler</h3>
+            <button className={styles.sectionAction} onClick={() => navigate('/menu')}>
+              Tümünü Gör
+            </button>
+          </div>
+          
+          <div className={styles.popularList}>
+            {popularItems.map((item, index) => (
+              <div key={item.id} className={styles.popularItem}>
+                <div className={styles.popularRank}>{index + 1}</div>
+                <div className={styles.popularInfo}>
+                  <div className={styles.popularName}>{item.name}</div>
+                  <div className={styles.popularCategory}>{item.category}</div>
+                </div>
+                <div className={styles.popularStats}>
+                  <div className={styles.popularCount}>{item.count}x</div>
+                  <div className={styles.popularRevenue}>{formatCurrency(item.revenue)}</div>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Hızlı İşlemler */}
-          <Card className={styles.quickActionsCard}>
-            <CardContent>
-              <h4>Hızlı İşlemler</h4>
-              <div className={styles.quickGrid}>
-                <motion.button
-                  className={styles.quickBtn}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => navigate('/tables')}
-                >
-                  <Zap size={20} />
-                  <span>Yeni Sipariş</span>
-                </motion.button>
-                <motion.button
-                  className={styles.quickBtn}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => navigate('/kitchen')}
-                >
-                  <ChefHat size={20} />
-                  <span>Mutfak</span>
-                </motion.button>
-                <motion.button
-                  className={styles.quickBtn}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => navigate('/reservations')}
-                >
-                  <Calendar size={20} />
-                  <span>Rezervasyon</span>
-                </motion.button>
-                <motion.button
-                  className={styles.quickBtn}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => navigate('/analytics')}
-                >
-                  <BarChart3 size={20} />
-                  <span>Raporlar</span>
-                </motion.button>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Alt Bilgi Kartları */}
-      <div className={styles.bottomGrid}>
-        <motion.div variants={item}>
-          <Card className={styles.infoCard}>
-            <CardContent className={styles.infoContent}>
-              <div className={styles.infoIcon}>
-                <ShoppingBag size={24} />
-              </div>
-              <div className={styles.infoText}>
-                <span className={styles.infoValue}>{orders?.length || 0}</span>
-                <span className={styles.infoLabel}>Toplam Sipariş</span>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div variants={item}>
-          <Card className={styles.infoCard}>
-            <CardContent className={styles.infoContent}>
-              <div className={styles.infoIcon}>
-                <Clock size={24} />
-              </div>
-              <div className={styles.infoText}>
-                <span className={styles.infoValue}>{stats?.avgOrderTime || 12} dk</span>
-                <span className={styles.infoLabel}>Ort. Hazırlama</span>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div variants={item}>
-          <Card className={styles.infoCard}>
-            <CardContent className={styles.infoContent}>
-              <div className={styles.infoIcon}>
-                <Star size={24} />
-              </div>
-              <div className={styles.infoText}>
-                <span className={styles.infoValue}>{stats?.customerSatisfaction || 4.8}</span>
-                <span className={styles.infoLabel}>Müşteri Puanı</span>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div variants={item}>
-          <Card className={styles.infoCard}>
-            <CardContent className={styles.infoContent}>
-              <div className={styles.infoIcon}>
-                <Users size={24} />
-              </div>
-              <div className={styles.infoText}>
-                <span className={styles.infoValue}>{dashboardStats?.occupiedTables * 3 || 0}</span>
-                <span className={styles.infoLabel}>Tahmini Müşteri</span>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+      {/* Quick Actions */}
+      <div className={styles.quickActions}>
+        <button className={styles.quickAction} onClick={() => navigate('/orders/new')}>
+          <div className={styles.quickActionIcon}>
+            <Plus size={24} />
+          </div>
+          <div className={styles.quickActionLabel}>Yeni Sipariş</div>
+        </button>
+        <button className={styles.quickAction} onClick={() => navigate('/tables')}>
+          <div className={styles.quickActionIcon}>
+            <Users size={24} />
+          </div>
+          <div className={styles.quickActionLabel}>Masalar</div>
+        </button>
       </div>
-    </motion.div>
+    </div>
   )
 }
- 
