@@ -1,122 +1,40 @@
-/* Professional Card Component */
+/* Card Component - Simple & Clean */
 
 .card {
   background: var(--bg-card);
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-base);
+  box-shadow: var(--shadow);
   overflow: hidden;
 }
 
 .card:hover {
   box-shadow: var(--shadow-md);
-  border-color: var(--border-medium);
 }
 
-/* Card Variants */
-.cardElevated {
-  box-shadow: var(--shadow-md);
-}
-
-.cardElevated:hover {
-  box-shadow: var(--shadow-lg);
-}
-
-.cardFlat {
-  box-shadow: none;
-  border: 1px solid var(--border-light);
-}
-
-.cardInteractive {
-  cursor: pointer;
-  user-select: none;
-}
-
-.cardInteractive:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-lg);
-}
-
-.cardInteractive:active {
-  transform: translateY(0);
-  box-shadow: var(--shadow-sm);
-}
-
-/* Card Header */
 .cardHeader {
-  padding: var(--space-5);
+  padding: var(--space-lg);
   border-bottom: 1px solid var(--border-light);
 }
 
 .cardTitle {
-  font-size: var(--font-size-lg);
+  font-size: 1.125rem;
   font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
+  color: var(--text-main);
 }
 
 .cardSubtitle {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
-  margin-top: var(--space-1);
+  font-size: 0.875rem;
+  color: var(--text-sub);
+  margin-top: 0.25rem;
 }
 
-/* Card Content */
 .cardContent {
-  padding: var(--space-5);
+  padding: var(--space-lg);
 }
 
-.cardContentCompact {
-  padding: var(--space-4);
-}
-
-/* Card Footer */
 .cardFooter {
-  padding: var(--space-5);
+  padding: var(--space-lg);
   border-top: 1px solid var(--border-light);
-  background: var(--bg-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
-/* Status Cards */
-.cardSuccess {
-  border-left: 4px solid var(--status-success);
-}
-
-.cardWarning {
-  border-left: 4px solid var(--status-warning);
-}
-
-.cardError {
-  border-left: 4px solid var(--status-error);
-}
-
-.cardInfo {
-  border-left: 4px solid var(--status-info);
-}
-
-/* Card Sizes */
-.cardSmall .cardContent {
-  padding: var(--space-3);
-}
-
-.cardLarge .cardContent {
-  padding: var(--space-6);
-}
-
-/* Loading State */
-.cardLoading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-/* Disabled State */
-.cardDisabled {
-  opacity: 0.5;
-  pointer-events: none;
-  cursor: not-allowed;
+  background: var(--bg-page);
 }

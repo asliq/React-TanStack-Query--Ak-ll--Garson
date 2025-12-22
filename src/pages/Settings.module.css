@@ -1,102 +1,98 @@
-/* ==========================================
-   SETTINGS - Professional POS System
-   ========================================== */
+/* Settings Page - Clean & Simple */
 
 .settings {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 1.5rem;
 }
 
-/* Profile Card */
 .profileCard {
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border-subtle) !important;
-  border-radius: var(--radius-lg) !important;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
 }
 
 .profileHeader {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .profileAvatar {
   width: 64px;
   height: 64px;
-  border-radius: var(--radius-lg);
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
+  background: var(--primary);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .profileInfo h2 {
   font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 0.25rem;
 }
 
 .profileInfo p {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  margin-bottom: 8px;
+  font-size: 0.875rem;
+  color: var(--text-sub);
+  margin-bottom: 0.5rem;
 }
 
 .profileRole {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  background: var(--bg-tertiary);
-  padding: 6px 12px;
-  border-radius: var(--radius-md);
-  color: var(--text-secondary);
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
   font-weight: 500;
 }
 
-/* Settings Grid */
 .settingsGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
 }
 
 .settingsCard {
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border-subtle) !important;
-  border-radius: var(--radius-lg) !important;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border-subtle);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .cardHeader svg {
-  width: 18px;
-  height: 18px;
-  color: var(--brand-primary);
+  width: 22px;
+  height: 22px;
+  color: var(--primary);
 }
 
 .cardHeader h3 {
-  font-size: 0.9375rem;
+  font-size: 1.125rem;
   font-weight: 600;
+  margin: 0;
 }
 
-/* Setting Item */
 .settingItem {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--border-subtle);
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .settingItem:last-child {
@@ -105,376 +101,119 @@
 }
 
 .settingInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex: 1;
 }
 
 .settingLabel {
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   font-weight: 500;
+  color: var(--text-main);
+  display: block;
+  margin-bottom: 0.25rem;
 }
 
 .settingDesc {
-  font-size: 0.6875rem;
-  color: var(--text-muted);
+  font-size: 0.8125rem;
+  color: var(--text-sub);
 }
 
-/* Theme Switch */
 .themeSwitch,
 .languageSwitch {
   display: flex;
-  gap: 6px;
+  gap: 0.5rem;
 }
 
 .themeBtn,
 .langBtn {
+  padding: 0.5rem 1rem;
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  border-radius: var(--radius-md);
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-  font-weight: 500;
-  transition: all var(--transition-fast);
+  gap: 0.5rem;
 }
 
 .themeBtn:hover,
 .langBtn:hover {
-  border-color: var(--border-medium);
+  background: var(--bg-hover);
 }
 
 .themeBtn.active,
 .langBtn.active {
-  background: var(--brand-primary);
-  border-color: var(--brand-primary);
+  background: var(--primary);
+  border-color: var(--primary);
   color: white;
 }
 
-.themeBtn svg {
-  width: 14px;
-  height: 14px;
-}
-
-/* Toggle Button */
-.toggleBtn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: var(--radius-md);
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-subtle);
-  font-size: 0.75rem;
-  font-weight: 500;
-  transition: all var(--transition-fast);
-  min-width: 120px;
-}
-
-.toggleBtn.on {
-  color: var(--color-success);
-  border-color: rgba(34, 197, 94, 0.3);
-}
-
-.toggleBtn.off {
-  color: var(--text-muted);
-}
-
-.toggleBtn svg {
-  width: 14px;
-  height: 14px;
-}
-
-.toggleTrack {
-  width: 32px;
-  height: 18px;
-  border-radius: 9px;
-  background: var(--border-medium);
+.toggle {
+  width: 48px;
+  height: 26px;
+  background: var(--border);
+  border-radius: 999px;
   position: relative;
-  margin-left: auto;
-  transition: background var(--transition-fast);
-}
-
-.toggleBtn.on .toggleTrack {
-  background: var(--color-success);
-}
-
-.toggleThumb {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: white;
-  transition: transform var(--transition-fast);
-}
-
-.toggleBtn.on .toggleThumb {
-  transform: translateX(14px);
-}
-
-/* Notification Types */
-.notificationTypes {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding-top: 12px;
-}
-
-.checkItem {
-  display: flex;
-  align-items: center;
-  gap: 10px;
   cursor: pointer;
-  font-size: 0.8125rem;
-  color: var(--text-secondary);
+  transition: background 0.15s;
 }
 
-.checkItem input {
-  display: none;
+.toggle.checked {
+  background: var(--primary);
 }
 
-.checkmark {
-  width: 18px;
-  height: 18px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: transparent;
-  transition: all var(--transition-fast);
-}
-
-.checkmark svg {
-  width: 10px;
-  height: 10px;
-}
-
-.checkItem input:checked + .checkmark {
-  background: var(--color-success);
-  border-color: var(--color-success);
-  color: white;
-}
-
-/* Interval Options */
-.intervalOptions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.intervalBtn {
-  padding: 6px 10px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-subtle);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  transition: all var(--transition-fast);
-}
-
-.intervalBtn:hover {
-  border-color: var(--border-medium);
-}
-
-.intervalBtn.active {
-  background: var(--color-info);
-  border-color: var(--color-info);
-  color: white;
-}
-
-/* View Mode Options */
-.viewModeOptions {
-  display: flex;
-  gap: 6px;
-}
-
-.viewModeBtn {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px 10px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-subtle);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  transition: all var(--transition-fast);
-}
-
-.viewModeBtn svg {
-  width: 12px;
-  height: 12px;
-}
-
-.viewModeBtn.active {
-  background: var(--status-ready);
-  border-color: var(--status-ready);
-  color: white;
-}
-
-/* Danger Button */
-.dangerBtn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  border-radius: var(--radius-md);
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  color: var(--color-danger);
-  font-size: 0.75rem;
-  font-weight: 500;
-  transition: all var(--transition-fast);
-}
-
-.dangerBtn svg {
-  width: 14px;
-  height: 14px;
-}
-
-.dangerBtn:hover {
-  background: var(--color-danger);
-  border-color: var(--color-danger);
-  color: white;
-}
-
-/* Version Badge */
-.versionBadge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: var(--radius-md);
-  background: rgba(34, 197, 94, 0.1);
-  color: var(--color-success);
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.versionBadge svg {
-  width: 12px;
-  height: 12px;
-}
-
-/* Status Badge */
-.statusBadge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  border-radius: var(--radius-md);
-  background: var(--bg-tertiary);
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.statusDot {
-  width: 8px;
-  height: 8px;
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: white;
   border-radius: 50%;
-  background: var(--color-success);
-  animation: pulse 2s infinite;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.15s;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+.toggle.checked::after {
+  transform: translateX(22px);
 }
 
-/* About Card */
-.aboutCard {
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border-subtle) !important;
-  border-radius: var(--radius-lg) !important;
+.select {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  color: var(--text-main);
+  cursor: pointer;
 }
 
-.aboutContent {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+.select:focus {
+  outline: none;
+  border-color: var(--primary);
 }
 
-.aboutLogo {
-  width: 56px;
-  height: 56px;
-  border-radius: var(--radius-lg);
-  background: var(--brand-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
-
-.aboutLogo svg {
-  width: 28px;
-  height: 28px;
-}
-
-.aboutInfo h3 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.aboutInfo p {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  margin-bottom: 10px;
-}
-
-.techStack {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.techStack span {
-  padding: 4px 8px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-tertiary);
-  font-size: 0.625rem;
+.actionBtn {
+  padding: 0.5rem 1rem;
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .settingsGrid {
-    grid-template-columns: 1fr;
-  }
+.actionBtn:hover {
+  background: var(--bg-hover);
 }
 
-@media (max-width: 640px) {
-  .profileHeader {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .settingItem {
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-  }
-  
-  .themeSwitch,
-  .languageSwitch,
-  .intervalOptions {
-    width: 100%;
-  }
-  
-  .themeBtn,
-  .langBtn {
-    flex: 1;
-    justify-content: center;
-  }
+.actionBtn.danger {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.actionBtn.danger:hover {
+  background: var(--danger-light);
 }
