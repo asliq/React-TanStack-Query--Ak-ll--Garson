@@ -1,64 +1,122 @@
-/* Card - Professional POS */
+/* Professional Card Component */
+
 .card {
   background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
-  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+  overflow: hidden;
 }
 
-/* Variants */
-.default {}
-
-.glass {
-  background: rgba(30, 32, 40, 0.8);
-  backdrop-filter: blur(12px);
+.card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-medium);
 }
 
-.elevated {
+/* Card Variants */
+.cardElevated {
   box-shadow: var(--shadow-md);
 }
 
-.outlined {
-  background: transparent;
-  border: 1px solid var(--border-medium);
+.cardElevated:hover {
+  box-shadow: var(--shadow-lg);
 }
 
-.gradient {
-  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-tertiary) 100%);
+.cardFlat {
+  box-shadow: none;
+  border: 1px solid var(--border-light);
 }
 
-/* Glow Effect */
-.glow {
-  box-shadow: var(--shadow-glow);
+.cardInteractive {
+  cursor: pointer;
+  user-select: none;
+}
+
+.cardInteractive:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.cardInteractive:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Card Header */
-.header {
-  padding: 16px 18px;
-  border-bottom: 1px solid var(--border-subtle);
+.cardHeader {
+  padding: var(--space-5);
+  border-bottom: 1px solid var(--border-light);
 }
 
-/* Card Title */
-.title {
-  font-size: 0.9375rem;
+.cardTitle {
+  font-size: var(--font-size-lg);
   font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
 }
 
-/* Card Description */
-.description {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  margin-top: 4px;
+.cardSubtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-top: var(--space-1);
 }
 
 /* Card Content */
-.content {
-  padding: 18px;
+.cardContent {
+  padding: var(--space-5);
+}
+
+.cardContentCompact {
+  padding: var(--space-4);
 }
 
 /* Card Footer */
-.footer {
-  padding: 14px 18px;
-  border-top: 1px solid var(--border-subtle);
-  background: var(--bg-tertiary);
+.cardFooter {
+  padding: var(--space-5);
+  border-top: 1px solid var(--border-light);
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* Status Cards */
+.cardSuccess {
+  border-left: 4px solid var(--status-success);
+}
+
+.cardWarning {
+  border-left: 4px solid var(--status-warning);
+}
+
+.cardError {
+  border-left: 4px solid var(--status-error);
+}
+
+.cardInfo {
+  border-left: 4px solid var(--status-info);
+}
+
+/* Card Sizes */
+.cardSmall .cardContent {
+  padding: var(--space-3);
+}
+
+.cardLarge .cardContent {
+  padding: var(--space-6);
+}
+
+/* Loading State */
+.cardLoading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Disabled State */
+.cardDisabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
 }
