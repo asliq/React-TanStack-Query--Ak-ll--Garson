@@ -766,7 +766,7 @@
       "date": "2024-12-19",
       "time": "19:00",
       "duration": 120,
-      "status": "confirmed",
+      "status": "completed",
       "notes": "Pencere kenarı tercih",
       "createdAt": "2024-12-18T14:00:00Z"
     },
@@ -780,7 +780,7 @@
       "date": "2024-12-19",
       "time": "20:00",
       "duration": 150,
-      "status": "confirmed",
+      "status": "completed",
       "notes": "Vejetaryen menü",
       "createdAt": "2024-12-17T10:00:00Z"
     },
@@ -794,7 +794,7 @@
       "date": "2024-12-20",
       "time": "13:00",
       "duration": 180,
-      "status": "confirmed",
+      "status": "completed",
       "notes": "İş yemeği",
       "createdAt": "2024-12-19T09:00:00Z"
     },

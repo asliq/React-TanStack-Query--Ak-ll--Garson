@@ -1,30 +1,42 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
 import { 
   ShoppingCart, 
   Plus, 
   Minus, 
   Clock, 
-  Flame,
   X,
-  ChevronRight,
   Bell,
   Search,
-  ArrowLeft
+  ArrowLeft,
+  CreditCard,
+  Wallet,
+  DollarSign,
+  Check,
+  MessageSquare
 } from 'lucide-react'
 import { useMenuWithCategories } from '../../hooks/useMenu'
 import { useCreateOrder } from '../../hooks/useOrders'
-import { Skeleton } from '../../components/ui/Skeleton'
 import styles from './CustomerMenu.module.css'
+
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('tr-TR', { 
+    style: 'currency', 
+    currency: 'TRY',
+    minimumFractionDigits: 0
+  }).format(value)
+}
 
 export default function CustomerMenu() {
   const navigate = useNavigate()
-  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [cart, setCart] = useState([])
   const [showCart, setShowCart] = useState(false)
+  const [showPayment, setShowPayment] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState('cash')
   const [customerTable, setCustomerTable] = useState(null)
+  const [orderNotes, setOrderNotes] = useState('')
   
   const { categories, menuItems, isLoading } = useMenuWithCategories()
   const createOrder = useCreateOrder()
@@ -38,19 +50,17 @@ export default function CustomerMenu() {
     setCustomerTable(JSON.parse(tableData))
   }, [navigate])
 
-  // Filtrelenmiş menü
   const filteredMenu = useMemo(() => {
     if (!menuItems) return []
     return menuItems.filter(item => {
       if (!item.isAvailable) return false
-      const categoryMatch = !selectedCategory || item.categoryId === selectedCategory
+      const categoryMatch = selectedCategory === 'all' || item.categoryId === selectedCategory
       const searchMatch = !searchQuery || 
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
       return categoryMatch && searchMatch
     })
   }, [menuItems, selectedCategory, searchQuery])
 
-  // Sepet işlemleri
   const addToCart = (item) => {
     setCart(prev => {
       const existing = prev.find(i => i.id === item.id)
@@ -78,17 +88,19 @@ export default function CustomerMenu() {
     }).filter(Boolean))
   }
 
-  const updateNotes = (itemId, notes) => {
-    setCart(prev => prev.map(item => 
-      item.id === itemId ? { ...item, notes } : item
-    ))
-  }
-
-  // Toplam hesaplama
   const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
+  const serviceFee = cartTotal * 0.10 // %10 servis ücreti
+  const totalWithService = cartTotal + serviceFee
 
-  // Sipariş gönder
+  const handleCallWaiter = () => {
+    alert('Garson çağrıldı! En kısa sürede size yardımcı olacaktır.')
+  }
+
+  const handleRequestBill = () => {
+    setShowPayment(true)
+  }
+
   const handleOrder = () => {
     if (cart.length === 0 || !customerTable) return
 
@@ -97,272 +109,248 @@ export default function CustomerMenu() {
       items: cart.map(item => ({
         menuItemId: item.id,
         quantity: item.quantity,
+        price: item.price,
         notes: item.notes
       })),
+      total: totalWithService,
+      notes: orderNotes,
+      paymentMethod: showPayment ? paymentMethod : null,
       status: 'pending',
-      totalAmount: cartTotal,
-      isCustomerOrder: true
+      createdAt: new Date().toISOString()
     }
 
     createOrder.mutate(orderData, {
       onSuccess: () => {
         setCart([])
         setShowCart(false)
+        setShowPayment(false)
+        alert('Siparişiniz alındı! Teşekkürler.')
         navigate('/customer/orders')
+      },
+      onError: (error) => {
+        alert('Sipariş gönderilemedi. Lütfen tekrar deneyin.')
       }
     })
   }
 
-  const getCartItemQuantity = (itemId) => {
-    return cart.find(i => i.id === itemId)?.quantity || 0
-  }
-
-  if (isLoading || !customerTable) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.loadingGrid}>
-          {[1, 2, 3, 4, 5, 6].map(i => (
-            <Skeleton key={i} height="200px" borderRadius="16px" />
-          ))}
-        </div>
-      </div>
-    )
+  if (isLoading) {
+    return <div className={styles.loading}>Menü yükleniyor...</div>
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.customerMenu}>
       {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.headerTop}>
-          <button className={styles.backBtn} onClick={() => navigate('/customer')}>
-            <ArrowLeft size={20} />
-          </button>
-          <div className={styles.tableInfo}>
-            <span className={styles.tableNumber}>Masa {customerTable.tableNumber}</span>
-            <span className={styles.tableSection}>{customerTable.section}</span>
-          </div>
-          <button className={styles.callWaiter}>
-            <Bell size={18} />
-          </button>
+      <div className={styles.header}>
+        <button className={styles.backBtn} onClick={() => navigate('/customer')}>
+          <ArrowLeft size={20} />
+        </button>
+        <div className={styles.tableInfo}>
+          <span>Masa {customerTable?.tableNumber || '-'}</span>
         </div>
-        
-        {/* Search */}
-        <div className={styles.searchBar}>
-          <Search size={18} />
-          <input
-            type="text"
-            placeholder="Menüde ara..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          {searchQuery && (
-            <button onClick={() => setSearchQuery('')}>
-              <X size={16} />
-            </button>
-          )}
-        </div>
-      </header>
+        <button className={styles.cartBtn} onClick={() => setShowCart(true)}>
+          <ShoppingCart size={20} />
+          {cartCount > 0 && <span className={styles.cartBadge}>{cartCount}</span>}
+        </button>
+      </div>
+
+      {/* Search */}
+      <div className={styles.searchBar}>
+        <Search size={18} />
+        <input
+          type="text"
+          placeholder="Menüde ara..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
 
       {/* Categories */}
       <div className={styles.categories}>
         <button
-          className={`${styles.categoryBtn} ${!selectedCategory ? styles.active : ''}`}
-          onClick={() => setSelectedCategory(null)}
+          className={`${styles.categoryBtn} ${selectedCategory === 'all' ? styles.active : ''}`}
+          onClick={() => setSelectedCategory('all')}
         >
-          🍽️ Tümü
+          Tümü
         </button>
-        {categories.map(cat => (
+        {categories?.map(category => (
           <button
-            key={cat.id}
-            className={`${styles.categoryBtn} ${selectedCategory === cat.id ? styles.active : ''}`}
-            onClick={() => setSelectedCategory(cat.id)}
+            key={category.id}
+            className={`${styles.categoryBtn} ${selectedCategory === category.id ? styles.active : ''}`}
+            onClick={() => setSelectedCategory(category.id)}
           >
-            {cat.icon} {cat.name}
+            {category.name}
           </button>
         ))}
       </div>
 
-      {/* Menu Grid */}
-      <main className={styles.main}>
-        <motion.div className={styles.menuGrid} layout>
-          <AnimatePresence mode="popLayout">
-            {filteredMenu.map((item, index) => {
-              const quantity = getCartItemQuantity(item.id)
-              
-              return (
-                <motion.div
-                  key={item.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ delay: index * 0.03 }}
-                  className={`${styles.menuCard} ${quantity > 0 ? styles.inCart : ''}`}
-                >
-                  <div className={styles.cardImage}>
-                    <img src={item.image} alt={item.name} />
-                    {quantity > 0 && (
-                      <div className={styles.cartBadge}>{quantity}</div>
-                    )}
-                    <div className={styles.prepTime}>
-                      <Clock size={12} />
-                      <span>{item.preparationTime} dk</span>
-                    </div>
-                  </div>
-                  
-                  <div className={styles.cardContent}>
-                    <h3>{item.name}</h3>
-                    <p className={styles.description}>{item.description}</p>
-                    
-                    <div className={styles.cardFooter}>
-                      <span className={styles.price}>₺{item.price}</span>
-                      
-                      {quantity > 0 ? (
-                        <div className={styles.quantityControl}>
-                          <button onClick={() => updateQuantity(item.id, -1)}>
-                            <Minus size={16} />
-                          </button>
-                          <span>{quantity}</span>
-                          <button onClick={() => updateQuantity(item.id, 1)}>
-                            <Plus size={16} />
-                          </button>
-                        </div>
-                      ) : (
-                        <button 
-                          className={styles.addBtn}
-                          onClick={() => addToCart(item)}
-                        >
-                          <Plus size={18} />
-                          <span>Ekle</span>
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              )
-            })}
-          </AnimatePresence>
-        </motion.div>
-
-        {filteredMenu.length === 0 && (
-          <div className={styles.emptyState}>
-            <p>Aramanızla eşleşen ürün bulunamadı</p>
-          </div>
-        )}
-      </main>
-
-      {/* Cart Button */}
-      {cartCount > 0 && !showCart && (
-        <motion.button
-          className={styles.cartButton}
-          onClick={() => setShowCart(true)}
-          initial={{ y: 100 }}
-          animate={{ y: 0 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <div className={styles.cartLeft}>
-            <ShoppingCart size={22} />
-            <span className={styles.cartBadgeBtn}>{cartCount}</span>
-          </div>
-          <span>Sepeti Görüntüle</span>
-          <span className={styles.cartTotal}>₺{cartTotal}</span>
-        </motion.button>
-      )}
-
-      {/* Cart Drawer */}
-      <AnimatePresence>
-        {showCart && (
-          <>
-            <motion.div
-              className={styles.overlay}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowCart(false)}
-            />
-            <motion.div
-              className={styles.cartDrawer}
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 25 }}
-            >
-              <div className={styles.cartHeader}>
-                <h2>Sepetiniz</h2>
-                <button onClick={() => setShowCart(false)}>
-                  <X size={24} />
+      {/* Menu Items */}
+      <div className={styles.menuGrid}>
+        {filteredMenu.map(item => (
+          <div key={item.id} className={styles.menuItem}>
+            <div className={styles.itemImage}>
+              {item.image ? (
+                <img src={item.image} alt={item.name} />
+              ) : (
+                <div className={styles.itemImagePlaceholder}>🍽️</div>
+              )}
+            </div>
+            <div className={styles.itemContent}>
+              <h3>{item.name}</h3>
+              <p className={styles.itemDesc}>{item.description}</p>
+              <div className={styles.itemFooter}>
+                <div className={styles.itemPrice}>{formatCurrency(item.price)}</div>
+                <button className={styles.addBtn} onClick={() => addToCart(item)}>
+                  <Plus size={16} />
+                  Ekle
                 </button>
               </div>
+            </div>
+          </div>
+        ))}
+      </div>
 
-              <div className={styles.cartItems}>
-                {cart.map(item => (
-                  <div key={item.id} className={styles.cartItem}>
-                    <img src={item.image} alt={item.name} />
-                    <div className={styles.cartItemInfo}>
-                      <h4>{item.name}</h4>
-                      <span className={styles.cartItemPrice}>₺{item.price}</span>
-                      <input
-                        type="text"
-                        placeholder="Not ekle (opsiyonel)"
-                        value={item.notes}
-                        onChange={(e) => updateNotes(item.id, e.target.value)}
-                        className={styles.notesInput}
-                      />
-                    </div>
-                    <div className={styles.cartItemActions}>
-                      <div className={styles.quantityControl}>
+      {/* Quick Actions */}
+      <div className={styles.quickActions}>
+        <button className={styles.quickBtn} onClick={handleCallWaiter}>
+          <Bell size={20} />
+          <span>Garson Çağır</span>
+        </button>
+        <button className={styles.quickBtn} onClick={() => navigate('/customer/orders')}>
+          <Clock size={20} />
+          <span>Siparişlerim</span>
+        </button>
+      </div>
+
+      {/* Cart Sidebar */}
+      {showCart && (
+        <>
+          <div className={styles.overlay} onClick={() => setShowCart(false)} />
+          <div className={styles.cartSidebar}>
+            <div className={styles.cartHeader}>
+              <h2>Sepetim</h2>
+              <button className={styles.closeBtn} onClick={() => setShowCart(false)}>
+                <X size={20} />
+              </button>
+            </div>
+
+            {cart.length === 0 ? (
+              <div className={styles.emptyCart}>
+                <ShoppingCart size={48} />
+                <p>Sepetiniz boş</p>
+              </div>
+            ) : (
+              <>
+                <div className={styles.cartItems}>
+                  {cart.map(item => (
+                    <div key={item.id} className={styles.cartItem}>
+                      <div className={styles.cartItemInfo}>
+                        <h4>{item.name}</h4>
+                        <p>{formatCurrency(item.price)}</p>
+                      </div>
+                      <div className={styles.cartItemActions}>
                         <button onClick={() => updateQuantity(item.id, -1)}>
-                          <Minus size={14} />
+                          <Minus size={16} />
                         </button>
                         <span>{item.quantity}</span>
                         <button onClick={() => updateQuantity(item.id, 1)}>
-                          <Plus size={14} />
+                          <Plus size={16} />
+                        </button>
+                        <button 
+                          className={styles.removeBtn}
+                          onClick={() => removeFromCart(item.id)}
+                        >
+                          <X size={16} />
                         </button>
                       </div>
-                      <span className={styles.itemTotal}>
-                        ₺{item.price * item.quantity}
-                      </span>
+                      <div className={styles.cartItemTotal}>
+                        {formatCurrency(item.price * item.quantity)}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              <div className={styles.cartFooter}>
+                <div className={styles.orderNotes}>
+                  <MessageSquare size={18} />
+                  <textarea
+                    placeholder="Sipariş notu (opsiyonel)"
+                    value={orderNotes}
+                    onChange={(e) => setOrderNotes(e.target.value)}
+                    rows={2}
+                  />
+                </div>
+
                 <div className={styles.cartSummary}>
                   <div className={styles.summaryRow}>
-                    <span>Ara Toplam</span>
-                    <span>₺{cartTotal}</span>
+                    <span>Ara Toplam:</span>
+                    <span>{formatCurrency(cartTotal)}</span>
                   </div>
                   <div className={styles.summaryRow}>
-                    <span>Servis</span>
-                    <span>₺0</span>
+                    <span>Servis Ücreti (%10):</span>
+                    <span>{formatCurrency(serviceFee)}</span>
                   </div>
                   <div className={`${styles.summaryRow} ${styles.total}`}>
-                    <span>Toplam</span>
-                    <span>₺{cartTotal}</span>
+                    <span>Toplam:</span>
+                    <strong>{formatCurrency(totalWithService)}</strong>
                   </div>
                 </div>
 
-                <button 
-                  className={styles.orderBtn}
-                  onClick={handleOrder}
-                  disabled={createOrder.isPending}
-                >
-                  {createOrder.isPending ? (
-                    <span>Sipariş Gönderiliyor...</span>
-                  ) : (
-                    <>
-                      <span>Siparişi Onayla</span>
-                      <ChevronRight size={20} />
-                    </>
-                  )}
-                </button>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+                {!showPayment ? (
+                  <div className={styles.cartFooter}>
+                    <button 
+                      className={`${styles.orderBtn} ${styles.secondary}`}
+                      onClick={handleRequestBill}
+                    >
+                      <CreditCard size={18} />
+                      Hesap İste
+                    </button>
+                    <button 
+                      className={styles.orderBtn}
+                      onClick={handleOrder}
+                    >
+                      <Check size={18} />
+                      Sipariş Ver
+                    </button>
+                  </div>
+                ) : (
+                  <div className={styles.paymentSection}>
+                    <h3>Ödeme Yöntemi</h3>
+                    <div className={styles.paymentMethods}>
+                      <button
+                        className={`${styles.paymentBtn} ${paymentMethod === 'cash' ? styles.active : ''}`}
+                        onClick={() => setPaymentMethod('cash')}
+                      >
+                        <Wallet size={20} />
+                        <span>Nakit</span>
+                      </button>
+                      <button
+                        className={`${styles.paymentBtn} ${paymentMethod === 'card' ? styles.active : ''}`}
+                        onClick={() => setPaymentMethod('card')}
+                      >
+                        <CreditCard size={20} />
+                        <span>Kart</span>
+                      </button>
+                      <button
+                        className={`${styles.paymentBtn} ${paymentMethod === 'online' ? styles.active : ''}`}
+                        onClick={() => setPaymentMethod('online')}
+                      >
+                        <DollarSign size={20} />
+                        <span>Online</span>
+                      </button>
+                    </div>
+                    <button 
+                      className={styles.confirmBtn}
+                      onClick={handleOrder}
+                    >
+                      <Check size={18} />
+                      Ödemeyi Tamamla ({formatCurrency(totalWithService)})
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </>
+      )}
     </div>
   )
 }
-
