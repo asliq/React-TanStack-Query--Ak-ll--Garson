@@ -734,6 +734,25 @@
       "status": "served",
       "totalAmount": 290,
       "createdAt": "2025-12-19T13:06:49.347Z"
+    },
+    {
+      "id": "8bef",
+      "tableId": 2,
+      "items": [
+        {
+          "menuItemId": "12",
+          "quantity": 2,
+          "notes": ""
+        },
+        {
+          "menuItemId": "16",
+          "quantity": 2,
+          "notes": ""
+        }
+      ],
+      "status": "preparing",
+      "totalAmount": 560,
+      "createdAt": "2025-12-22T16:56:55.596Z"
     }
   ],
   "reservations": [
