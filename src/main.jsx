@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { BrowserRouter } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { NotificationProvider } from './components/NotificationProvider'
+import { ThemeProvider } from './components/ThemeProvider'
 import App from './App.jsx'
 import './index.css'
 
@@ -34,8 +35,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <NotificationProvider>
-          <App />
+        <ThemeProvider>
+          <NotificationProvider>
+            <App />
           <Toaster 
             position="bottom-right"
             toastOptions={{
@@ -49,7 +51,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               },
             }}
           />
-        </NotificationProvider>
+          </NotificationProvider>
+        </ThemeProvider>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
