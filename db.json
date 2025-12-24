@@ -190,7 +190,7 @@
       "price": 65,
       "image": "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400",
       "preparationTime": 3,
-      "isAvailable": true,
+      "isAvailable": false,
       "calories": 180,
       "allergens": [
         "gluten"
@@ -204,7 +204,7 @@
       "price": 75,
       "image": "https://images.unsplash.com/photo-1577805947697-89e18249d767?w=400",
       "preparationTime": 5,
-      "isAvailable": true,
+      "isAvailable": false,
       "calories": 220,
       "allergens": [
         "susam"
@@ -247,7 +247,7 @@
       "price": 165,
       "image": "https://images.unsplash.com/photo-1532636875304-0c89f5e0ef52?w=400",
       "preparationTime": 18,
-      "isAvailable": true,
+      "isAvailable": false,
       "calories": 480,
       "allergens": []
     },
@@ -259,7 +259,7 @@
       "price": 320,
       "image": "https://images.unsplash.com/photo-1544025162-d76694265947?w=400",
       "preparationTime": 25,
-      "isAvailable": true,
+      "isAvailable": false,
       "calories": 720,
       "allergens": [
         "süt"
@@ -332,7 +332,7 @@
       "price": 135,
       "image": "https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=400",
       "preparationTime": 12,
-      "isAvailable": true,
+      "isAvailable": false,
       "calories": 780,
       "allergens": [
         "gluten",
@@ -731,7 +731,7 @@
           "notes": ""
         }
       ],
-      "status": "served",
+      "status": "completed",
       "totalAmount": 290,
       "createdAt": "2025-12-19T13:06:49.347Z"
     },
@@ -750,7 +750,7 @@
           "notes": ""
         }
       ],
-      "status": "preparing",
+      "status": "served",
       "totalAmount": 560,
       "createdAt": "2025-12-22T16:56:55.596Z"
     }
@@ -808,7 +808,7 @@
       "date": "2024-12-20",
       "time": "19:30",
       "duration": 90,
-      "status": "confirmed",
+      "status": "completed",
       "notes": "Yıldönümü",
       "createdAt": "2024-12-19T11:00:00Z"
     }
