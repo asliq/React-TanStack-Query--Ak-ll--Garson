@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import Layout from './components/Layout/Layout'
 import AuthGuard from './components/AuthGuard'
+import { KeyboardShortcuts } from './components/KeyboardShortcuts'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Tables from './pages/Tables'
@@ -20,8 +21,10 @@ import CustomerOrders from './pages/customer/CustomerOrders'
 
 function App() {
   return (
-    <AnimatePresence mode="wait">
-      <Routes>
+    <>
+      <KeyboardShortcuts />
+      <AnimatePresence mode="wait">
+        <Routes>
         {/* Staff Login */}
         <Route path="/login" element={<Login />} />
         
@@ -49,8 +52,9 @@ function App() {
             </Layout>
           </AuthGuard>
         } />
-      </Routes>
-    </AnimatePresence>
+        </Routes>
+      </AnimatePresence>
+    </>
   )
 }
 
