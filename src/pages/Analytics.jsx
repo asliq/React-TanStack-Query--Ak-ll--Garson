@@ -1,341 +1,402 @@
-import { motion } from 'framer-motion'
+import { useState, useMemo } from 'react'
 import { 
+  BarChart3, 
   TrendingUp, 
-  TrendingDown,
   DollarSign,
-  ShoppingCart,
+  ShoppingBag,
   Users,
   Clock,
-  AlertTriangle,
-  BarChart3
+  Calendar,
+  Download
 } from 'lucide-react'
 import { 
-  AreaChart, 
-  Area, 
+  LineChart, 
+  Line, 
+  BarChart, 
+  Bar, 
+  PieChart, 
+  Pie, 
+  Cell,
   XAxis, 
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell
+  Legend, 
+  ResponsiveContainer 
 } from 'recharts'
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card'
-import { Skeleton } from '../components/ui/Skeleton'
-import { 
-  useDailyStats, 
-  useWeeklyTrend,
-  useCategoryPerformance,
-  useTopSellingItems,
-  useLowStockItems
-} from '../hooks/useAnalytics'
+import { useOrders } from '../hooks/useOrders'
+import { useMenuItems } from '../hooks/useMenu'
 import styles from './Analytics.module.css'
 
-const COLORS = ['#d4a574', '#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899']
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 }
-  }
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('tr-TR', { 
+    style: 'currency', 
+    currency: 'TRY',
+    minimumFractionDigits: 0
+  }).format(value)
 }
 
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 }
-}
+const COLORS = ['#2563eb', '#16a34a', '#ea580c', '#dc2626', '#8b5cf6', '#0284c7']
 
 export default function Analytics() {
-  const { data: dailyStats, isLoading: statsLoading } = useDailyStats()
-  const weeklyTrend = useWeeklyTrend()
-  const { data: categoryPerformance, isLoading: categoryLoading } = useCategoryPerformance()
-  const { data: topItems, isLoading: topItemsLoading } = useTopSellingItems(5)
-  const lowStockItems = useLowStockItems()
+  const [period, setPeriod] = useState('week')
+  const { data: orders } = useOrders()
+  const { data: menuItems } = useMenuItems()
 
-  const isLoading = statsLoading || categoryLoading || topItemsLoading
+  // Günlük satış verileri
+  const dailySales = useMemo(() => {
+    if (!orders) return []
+    
+    const salesByDate = {}
+    const now = new Date()
+    const daysToShow = period === 'week' ? 7 : period === 'month' ? 30 : 90
 
-  // Bugünkü istatistikler
-  const todayStats = dailyStats?.[dailyStats.length - 1]
+    // Son X gün için sıfır değerler
+    for (let i = daysToShow - 1; i >= 0; i--) {
+      const date = new Date(now)
+      date.setDate(date.getDate() - i)
+      const dateKey = date.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit' })
+      salesByDate[dateKey] = { date: dateKey, revenue: 0, orders: 0 }
+    }
 
-  // Grafik için veri formatla
-  const chartData = dailyStats?.map(stat => ({
-    date: new Date(stat.date).toLocaleDateString('tr-TR', { weekday: 'short' }),
-    gelir: stat.revenue,
-    siparis: stat.orders,
-  })) || []
+    // Siparişleri grupla
+    orders.forEach(order => {
+      const orderDate = new Date(order.createdAt)
+      const dateKey = orderDate.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit' })
+      
+      if (salesByDate[dateKey]) {
+        salesByDate[dateKey].revenue += order.total
+        salesByDate[dateKey].orders += 1
+      }
+    })
 
-  // Kategori pasta grafiği için veri
-  const pieData = categoryPerformance?.slice(0, 6).map(cat => ({
-    name: cat.name,
-    value: cat.totalRevenue,
-    icon: cat.icon,
-  })) || []
+    return Object.values(salesByDate)
+  }, [orders, period])
 
-  if (isLoading) {
-    return (
-      <div className={styles.page}>
-        <div className={styles.statsGrid}>
-          {[1, 2, 3, 4].map(i => (
-            <Skeleton key={i} height="120px" borderRadius="16px" />
-          ))}
-        </div>
-        <Skeleton height="400px" borderRadius="16px" />
-      </div>
-    )
-  }
+  // Saatlik analiz
+  const hourlySales = useMemo(() => {
+    if (!orders) return []
+
+    const salesByHour = Array(24).fill(0).map((_, i) => ({ 
+      hour: `${i}:00`, 
+      orders: 0 
+    }))
+
+    orders.forEach(order => {
+      const hour = new Date(order.createdAt).getHours()
+      salesByHour[hour].orders += 1
+    })
+
+    return salesByHour.filter(h => h.orders > 0)
+  }, [orders])
+
+  // En çok satan ürünler
+  const topProducts = useMemo(() => {
+    if (!orders || !menuItems) return []
+
+    const productSales = {}
+    orders.forEach(order => {
+      order.items.forEach(item => {
+        if (!productSales[item.menuItemId]) {
+          productSales[item.menuItemId] = {
+            quantity: 0,
+            revenue: 0
+          }
+        }
+        productSales[item.menuItemId].quantity += item.quantity
+        productSales[item.menuItemId].revenue += item.price * item.quantity
+      })
+    })
+
+    return Object.entries(productSales)
+      .map(([id, data]) => {
+        const product = menuItems.find(m => m.id === parseInt(id))
+        return product ? {
+          name: product.name,
+          ...data
+        } : null
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.revenue - a.revenue)
+      .slice(0, 6)
+  }, [orders, menuItems])
+
+  // Özet istatistikler
+  const stats = useMemo(() => {
+    if (!orders) return { totalRevenue: 0, totalOrders: 0, avgOrder: 0, totalCustomers: 0 }
+
+    const total = orders.reduce((sum, o) => sum + o.total, 0)
+    const count = orders.length
+    const customers = new Set(orders.map(o => o.tableId)).size
+
+    return {
+      totalRevenue: total,
+      totalOrders: count,
+      avgOrder: count > 0 ? total / count : 0,
+      totalCustomers: customers
+    }
+  }, [orders])
 
   return (
-    <motion.div 
-      className={styles.page}
-      variants={container}
-      initial="hidden"
-      animate="show"
-    >
-      {/* Summary Stats */}
+    <div className={styles.analytics}>
+      {/* Header */}
+      <div className={styles.header}>
+        <div>
+          <h1>Raporlar ve Analitik</h1>
+          <p>İşletme performansınızı takip edin</p>
+        </div>
+        <div className={styles.headerActions}>
+          <select 
+            className={styles.periodSelect}
+            value={period}
+            onChange={(e) => setPeriod(e.target.value)}
+          >
+            <option value="week">Son 7 Gün</option>
+            <option value="month">Son 30 Gün</option>
+            <option value="quarter">Son 90 Gün</option>
+          </select>
+          <button className={styles.exportBtn}>
+            <Download size={18} />
+            Rapor İndir
+          </button>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
       <div className={styles.statsGrid}>
-        <motion.div variants={item}>
-          <Card className={styles.statCard} glow>
-            <CardContent className={styles.statContent}>
-              <div className={`${styles.statIcon} ${styles.revenue}`}>
-                <DollarSign size={24} />
-              </div>
-              <div className={styles.statInfo}>
-                <span className={styles.statLabel}>Bugünkü Gelir</span>
-                <span className={styles.statValue}>₺{todayStats?.revenue?.toLocaleString('tr-TR')}</span>
-              </div>
-              {weeklyTrend && (
-                <div className={`${styles.trend} ${weeklyTrend.trend === 'up' ? styles.up : styles.down}`}>
-                  {weeklyTrend.trend === 'up' ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
-                  <span>{weeklyTrend.percentChange}%</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
+        <div className={styles.statCard}>
+          <div className={styles.statIcon} style={{ background: '#dbeafe', color: '#2563eb' }}>
+            <DollarSign size={24} />
+          </div>
+          <div className={styles.statContent}>
+            <div className={styles.statLabel}>Toplam Gelir</div>
+            <div className={styles.statValue}>{formatCurrency(stats.totalRevenue)}</div>
+            <div className={styles.statChange}>
+              <TrendingUp size={14} />
+              +12.5%
+            </div>
+          </div>
+        </div>
 
-        <motion.div variants={item}>
-          <Card className={styles.statCard}>
-            <CardContent className={styles.statContent}>
-              <div className={`${styles.statIcon} ${styles.orders}`}>
-                <ShoppingCart size={24} />
-              </div>
-              <div className={styles.statInfo}>
-                <span className={styles.statLabel}>Bugünkü Sipariş</span>
-                <span className={styles.statValue}>{todayStats?.orders}</span>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <div className={styles.statCard}>
+          <div className={styles.statIcon} style={{ background: '#dcfce7', color: '#16a34a' }}>
+            <ShoppingBag size={24} />
+          </div>
+          <div className={styles.statContent}>
+            <div className={styles.statLabel}>Toplam Sipariş</div>
+            <div className={styles.statValue}>{stats.totalOrders}</div>
+            <div className={styles.statChange}>
+              <TrendingUp size={14} />
+              +8.2%
+            </div>
+          </div>
+        </div>
 
-        <motion.div variants={item}>
-          <Card className={styles.statCard}>
-            <CardContent className={styles.statContent}>
-              <div className={`${styles.statIcon} ${styles.avgOrder}`}>
-                <BarChart3 size={24} />
-              </div>
-              <div className={styles.statInfo}>
-                <span className={styles.statLabel}>Ortalama Sipariş</span>
-                <span className={styles.statValue}>₺{todayStats?.avgOrderValue}</span>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <div className={styles.statCard}>
+          <div className={styles.statIcon} style={{ background: '#ffedd5', color: '#ea580c' }}>
+            <BarChart3 size={24} />
+          </div>
+          <div className={styles.statContent}>
+            <div className={styles.statLabel}>Ort. Sipariş</div>
+            <div className={styles.statValue}>{formatCurrency(stats.avgOrder)}</div>
+            <div className={styles.statChange}>
+              <TrendingUp size={14} />
+              +5.1%
+            </div>
+          </div>
+        </div>
 
-        <motion.div variants={item}>
-          <Card className={`${styles.statCard} ${lowStockItems.length > 0 ? styles.warning : ''}`}>
-            <CardContent className={styles.statContent}>
-              <div className={`${styles.statIcon} ${styles.stock}`}>
-                <AlertTriangle size={24} />
-              </div>
-              <div className={styles.statInfo}>
-                <span className={styles.statLabel}>Düşük Stok</span>
-                <span className={styles.statValue}>{lowStockItems.length} ürün</span>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <div className={styles.statCard}>
+          <div className={styles.statIcon} style={{ background: '#e0f2fe', color: '#0284c7' }}>
+            <Users size={24} />
+          </div>
+          <div className={styles.statContent}>
+            <div className={styles.statLabel}>Müşteri Sayısı</div>
+            <div className={styles.statValue}>{stats.totalCustomers}</div>
+            <div className={styles.statChange}>
+              <TrendingUp size={14} />
+              +15.3%
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Charts Row */}
-      <div className={styles.chartsRow}>
+      {/* Charts Grid */}
+      <div className={styles.chartsGrid}>
         {/* Revenue Chart */}
-        <motion.div variants={item} className={styles.chartLarge}>
-          <Card>
-            <CardHeader>
-              <CardTitle>Haftalık Gelir Grafiği</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className={styles.chartContainer}>
-                <ResponsiveContainer width="100%" height={300}>
-                  <AreaChart data={chartData}>
-                    <defs>
-                      <linearGradient id="colorGelir" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#d4a574" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#d4a574" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                    <XAxis dataKey="date" stroke="#71717a" fontSize={12} />
-                    <YAxis stroke="#71717a" fontSize={12} tickFormatter={(value) => `₺${value/1000}k`} />
-                    <Tooltip 
-                      contentStyle={{ 
-                        background: '#16162a', 
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '12px',
-                      }}
-                      formatter={(value) => [`₺${value.toLocaleString('tr-TR')}`, 'Gelir']}
-                    />
-                    <Area 
-                      type="monotone" 
-                      dataKey="gelir" 
-                      stroke="#d4a574" 
-                      strokeWidth={2}
-                      fillOpacity={1} 
-                      fill="url(#colorGelir)" 
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Category Distribution */}
-        <motion.div variants={item} className={styles.chartSmall}>
-          <Card>
-            <CardHeader>
-              <CardTitle>Kategori Dağılımı</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className={styles.chartContainer}>
-                <ResponsiveContainer width="100%" height={250}>
-                  <PieChart>
-                    <Pie
-                      data={pieData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={90}
-                      paddingAngle={5}
-                      dataKey="value"
-                    >
-                      {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      contentStyle={{ 
-                        background: '#16162a', 
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '12px',
-                      }}
-                      formatter={(value) => [`₺${value.toLocaleString('tr-TR')}`, 'Gelir']}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-                <div className={styles.legend}>
-                  {pieData.map((entry, index) => (
-                    <div key={index} className={styles.legendItem}>
-                      <span className={styles.legendColor} style={{ background: COLORS[index % COLORS.length] }} />
-                      <span>{entry.icon} {entry.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-
-      {/* Bottom Row */}
-      <div className={styles.bottomRow}>
-        {/* Top Selling Items */}
-        <motion.div variants={item}>
-          <Card>
-            <CardHeader>
-              <CardTitle>En Çok Satan Ürünler</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className={styles.topItemsList}>
-                {topItems?.map((item, index) => (
-                  <div key={item.id} className={styles.topItem}>
-                    <span className={styles.rank}>#{index + 1}</span>
-                    <img src={item.image} alt={item.name} className={styles.itemImage} />
-                    <div className={styles.itemInfo}>
-                      <span className={styles.itemName}>{item.name}</span>
-                      <span className={styles.itemStats}>{item.quantity} adet • ₺{item.revenue.toLocaleString('tr-TR')}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Low Stock Alert */}
-        <motion.div variants={item}>
-          <Card>
-            <CardHeader>
-              <CardTitle>Stok Uyarıları</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {lowStockItems.length > 0 ? (
-                <div className={styles.stockList}>
-                  {lowStockItems.map(item => (
-                    <div key={item.id} className={styles.stockItem}>
-                      <AlertTriangle size={16} className={styles.warningIcon} />
-                      <div className={styles.stockInfo}>
-                        <span className={styles.stockName}>{item.name}</span>
-                        <span className={styles.stockQty}>
-                          {item.quantity} {item.unit} kaldı (min: {item.minQuantity})
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className={styles.noAlerts}>
-                  <span>✅</span>
-                  <p>Tüm stoklar yeterli seviyede</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
+        <div className={styles.chartCard}>
+          <div className={styles.chartHeader}>
+            <h3>Gelir Trendi</h3>
+            <Calendar size={18} />
+          </div>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={dailySales}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis 
+                dataKey="date" 
+                stroke="var(--text-sub)"
+                style={{ fontSize: '12px' }}
+              />
+              <YAxis 
+                stroke="var(--text-sub)"
+                style={{ fontSize: '12px' }}
+                tickFormatter={(value) => `${value}₺`}
+              />
+              <Tooltip 
+                contentStyle={{ 
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius)'
+                }}
+                formatter={(value) => formatCurrency(value)}
+              />
+              <Legend />
+              <Line 
+                type="monotone" 
+                dataKey="revenue" 
+                stroke="#2563eb" 
+                strokeWidth={2}
+                name="Gelir"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
 
         {/* Orders Chart */}
-        <motion.div variants={item}>
-          <Card>
-            <CardHeader>
-              <CardTitle>Günlük Sipariş Sayısı</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className={styles.chartContainer}>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                    <XAxis dataKey="date" stroke="#71717a" fontSize={12} />
-                    <YAxis stroke="#71717a" fontSize={12} />
-                    <Tooltip 
-                      contentStyle={{ 
-                        background: '#16162a', 
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '12px',
-                      }}
-                    />
-                    <Bar dataKey="siparis" fill="#10b981" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <div className={styles.chartCard}>
+          <div className={styles.chartHeader}>
+            <h3>Sipariş Sayısı</h3>
+            <ShoppingBag size={18} />
+          </div>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={dailySales}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis 
+                dataKey="date" 
+                stroke="var(--text-sub)"
+                style={{ fontSize: '12px' }}
+              />
+              <YAxis 
+                stroke="var(--text-sub)"
+                style={{ fontSize: '12px' }}
+              />
+              <Tooltip 
+                contentStyle={{ 
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius)'
+                }}
+              />
+              <Legend />
+              <Bar 
+                dataKey="orders" 
+                fill="#16a34a" 
+                name="Sipariş"
+                radius={[8, 8, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Hourly Distribution */}
+        <div className={styles.chartCard}>
+          <div className={styles.chartHeader}>
+            <h3>Yoğun Saatler</h3>
+            <Clock size={18} />
+          </div>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={hourlySales}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis 
+                dataKey="hour" 
+                stroke="var(--text-sub)"
+                style={{ fontSize: '12px' }}
+              />
+              <YAxis 
+                stroke="var(--text-sub)"
+                style={{ fontSize: '12px' }}
+              />
+              <Tooltip 
+                contentStyle={{ 
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius)'
+                }}
+              />
+              <Bar 
+                dataKey="orders" 
+                fill="#ea580c" 
+                name="Sipariş"
+                radius={[8, 8, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Top Products */}
+        <div className={styles.chartCard}>
+          <div className={styles.chartHeader}>
+            <h3>En Çok Satan Ürünler</h3>
+            <BarChart3 size={18} />
+          </div>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={topProducts}
+                dataKey="revenue"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                label={(entry) => entry.name}
+              >
+                {topProducts.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip 
+                contentStyle={{ 
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius)'
+                }}
+                formatter={(value) => formatCurrency(value)}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
       </div>
-    </motion.div>
+
+      {/* Top Products Table */}
+      <div className={styles.tableCard}>
+        <h3>En Çok Satan Ürünler</h3>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Sıra</th>
+              <th>Ürün Adı</th>
+              <th>Adet</th>
+              <th>Gelir</th>
+            </tr>
+          </thead>
+          <tbody>
+            {topProducts.map((product, index) => (
+              <tr key={index}>
+                <td>
+                  <div className={styles.rank}>#{index + 1}</div>
+                </td>
+                <td>
+                  <strong>{product.name}</strong>
+                </td>
+                <td>{product.quantity}x</td>
+                <td>
+                  <strong>{formatCurrency(product.revenue)}</strong>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   )
 }
-
