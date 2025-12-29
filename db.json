@@ -646,8 +646,8 @@
       ],
       "status": "completed",
       "priority": "normal",
-      "createdAt": "2024-12-19T10:30:00Z",
-      "updatedAt": "2024-12-19T10:35:00Z",
+      "createdAt": "2025-12-19T10:30:00Z",
+      "updatedAt": "2025-12-19T10:35:00Z",
       "totalAmount": 450,
       "discount": 0,
       "notes": ""
@@ -678,8 +678,8 @@
       ],
       "status": "completed",
       "priority": "normal",
-      "createdAt": "2024-12-19T09:45:00Z",
-      "updatedAt": "2024-12-19T10:15:00Z",
+      "createdAt": "2025-12-19T09:45:00Z",
+      "updatedAt": "2025-12-19T10:15:00Z",
       "totalAmount": 580,
       "discount": 0,
       "notes": "VIP müşteri"
@@ -710,8 +710,8 @@
       ],
       "status": "completed",
       "priority": "high",
-      "createdAt": "2024-12-19T11:00:00Z",
-      "updatedAt": "2024-12-19T11:00:00Z",
+      "createdAt": "2025-12-19T11:00:00Z",
+      "updatedAt": "2025-12-19T11:00:00Z",
       "totalAmount": 1225,
       "discount": 50,
       "notes": "Doğum günü kutlaması"
@@ -763,12 +763,12 @@
       "customerPhone": "0532 123 4567",
       "customerEmail": "ahmet@email.com",
       "guestCount": 4,
-      "date": "2024-12-19",
+      "date": "2025-12-19",
       "time": "19:00",
       "duration": 120,
       "status": "completed",
       "notes": "Pencere kenarı tercih",
-      "createdAt": "2024-12-18T14:00:00Z"
+      "createdAt": "2025-12-18T14:00:00Z"
     },
     {
       "id": "2",
@@ -777,12 +777,12 @@
       "customerPhone": "0533 987 6543",
       "customerEmail": "ayse@email.com",
       "guestCount": 6,
-      "date": "2024-12-19",
+      "date": "2025-12-19",
       "time": "20:00",
       "duration": 150,
       "status": "completed",
       "notes": "Vejetaryen menü",
-      "createdAt": "2024-12-17T10:00:00Z"
+      "createdAt": "2025-12-17T10:00:00Z"
     },
     {
       "id": "3",
@@ -791,12 +791,12 @@
       "customerPhone": "0542 555 1234",
       "customerEmail": "mehmet@email.com",
       "guestCount": 8,
-      "date": "2024-12-20",
+      "date": "2025-12-20",
       "time": "13:00",
       "duration": 180,
       "status": "completed",
       "notes": "İş yemeği",
-      "createdAt": "2024-12-19T09:00:00Z"
+      "createdAt": "2025-12-19T09:00:00Z"
     },
     {
       "id": "4",
@@ -805,12 +805,12 @@
       "customerPhone": "0555 444 3333",
       "customerEmail": "",
       "guestCount": 2,
-      "date": "2024-12-20",
+      "date": "2025-12-20",
       "time": "19:30",
       "duration": 90,
       "status": "completed",
       "notes": "Yıldönümü",
-      "createdAt": "2024-12-19T11:00:00Z"
+      "createdAt": "2025-12-19T11:00:00Z"
     }
   ],
   "payments": [
@@ -822,8 +822,8 @@
       "tip": 50,
       "method": "credit_card",
       "status": "completed",
-      "processedAt": "2024-12-19T10:20:00Z",
-      "receiptNumber": "RCP-2024-001"
+      "processedAt": "2025-12-19T10:20:00Z",
+      "receiptNumber": "RCP-2025-001"
     }
   ],
   "waiters": [
@@ -883,7 +883,7 @@
       "title": "Yeni Sipariş",
       "message": "Masa 2'den yeni sipariş geldi",
       "read": false,
-      "createdAt": "2024-12-19T10:30:00Z"
+      "createdAt": "2025-12-19T10:30:00Z"
     },
     {
       "id": "2",
@@ -891,7 +891,7 @@
       "title": "Sipariş Hazır",
       "message": "Masa 5 siparişi servise hazır",
       "read": true,
-      "createdAt": "2024-12-19T10:15:00Z"
+      "createdAt": "2025-12-19T10:15:00Z"
     },
     {
       "id": "3",
@@ -899,7 +899,7 @@
       "title": "Yeni Rezervasyon",
       "message": "20 Aralık için yeni rezervasyon",
       "read": false,
-      "createdAt": "2024-12-19T09:00:00Z"
+      "createdAt": "2025-12-19T09:00:00Z"
     }
   ],
   "kitchenOrders": [
@@ -913,13 +913,13 @@
           "quantity": 2,
           "notes": "Az tuzlu",
           "status": "ready",
-          "startedAt": "2024-12-19T10:32:00Z",
+          "startedAt": "2025-12-19T10:32:00Z",
           "completedAt": "2025-12-21T14:22:28.651Z"
         }
       ],
       "priority": "normal",
       "tableNumber": 2,
-      "createdAt": "2024-12-19T10:30:00Z"
+      "createdAt": "2025-12-19T10:30:00Z"
     },
     {
       "id": "2",
@@ -946,13 +946,13 @@
       ],
       "priority": "high",
       "tableNumber": 11,
-      "createdAt": "2024-12-19T11:00:00Z",
+      "createdAt": "2025-12-19T11:00:00Z",
       "completedAt": "2025-12-22T13:24:31.169Z"
     }
   ],
   "dailyStats": [
     {
-      "date": "2024-12-13",
+      "date": "2025-12-13",
       "orders": 42,
       "revenue": 11250,
       "avgOrderValue": 268,
@@ -960,7 +960,7 @@
       "id": "8923"
     },
     {
-      "date": "2024-12-14",
+      "date": "2025-12-14",
       "orders": 56,
       "revenue": 15680,
       "avgOrderValue": 280,
@@ -968,7 +968,7 @@
       "id": "dde1"
     },
     {
-      "date": "2024-12-15",
+      "date": "2025-12-15",
       "orders": 48,
       "revenue": 13420,
       "avgOrderValue": 280,
@@ -976,7 +976,7 @@
       "id": "f8e2"
     },
     {
-      "date": "2024-12-16",
+      "date": "2025-12-16",
       "orders": 38,
       "revenue": 9850,
       "avgOrderValue": 259,
@@ -984,7 +984,7 @@
       "id": "ad40"
     },
     {
-      "date": "2024-12-17",
+      "date": "2025-12-17",
       "orders": 51,
       "revenue": 14200,
       "avgOrderValue": 278,
@@ -992,7 +992,7 @@
       "id": "9e2f"
     },
     {
-      "date": "2024-12-18",
+      "date": "2025-12-18",
       "orders": 62,
       "revenue": 17890,
       "avgOrderValue": 289,
@@ -1000,7 +1000,7 @@
       "id": "3cf6"
     },
     {
-      "date": "2024-12-19",
+      "date": "2025-12-19",
       "orders": 45,
       "revenue": 12450,
       "avgOrderValue": 277,

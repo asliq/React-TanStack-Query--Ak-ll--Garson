@@ -38,19 +38,19 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <ThemeProvider>
           <NotificationProvider>
             <App />
-          <Toaster 
-            position="bottom-right"
-            toastOptions={{
-              duration: 3000,
-              style: {
-                background: 'var(--bg-secondary)',
-                color: 'var(--text-primary)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: '14px',
-                boxShadow: 'var(--shadow-lg)',
-              },
-            }}
-          />
+            <Toaster 
+              position="bottom-right"
+              toastOptions={{
+                duration: 3000,
+                style: {
+                  background: 'var(--bg-secondary)',
+                  color: 'var(--text-primary)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '14px',
+                  boxShadow: 'var(--shadow-lg)',
+                },
+              }}
+            />
           </NotificationProvider>
         </ThemeProvider>
       </BrowserRouter>

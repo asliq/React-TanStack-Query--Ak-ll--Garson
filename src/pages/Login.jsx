@@ -215,7 +215,7 @@ export default function Login() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
         >
-          <p>© 2024 Akıllı Garson - Tüm hakları saklıdır</p>
+          <p>© 2025 Akıllı Garson - Tüm hakları saklıdır</p>
         </motion.div>
       </motion.div>
 
