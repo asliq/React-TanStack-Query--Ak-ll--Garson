@@ -15,8 +15,11 @@ export const useAppStore = create(
         // UI STATE
         // ==========================================
         sidebarCollapsed: false,
-        theme: 'dark',
+        theme: 'light',
         language: 'tr',
+        soundEnabled: true,
+        kitchenAutoRefresh: true,
+        kitchenRefreshInterval: 5000,
         
         toggleSidebar: () => set((state) => ({ 
           sidebarCollapsed: !state.sidebarCollapsed 
@@ -24,6 +27,9 @@ export const useAppStore = create(
         
         setTheme: (theme) => set({ theme }),
         setLanguage: (language) => set({ language }),
+        toggleSound: () => set((state) => ({ soundEnabled: !state.soundEnabled })),
+        setKitchenAutoRefresh: (value) => set({ kitchenAutoRefresh: value }),
+        setKitchenRefreshInterval: (interval) => set({ kitchenRefreshInterval: interval }),
 
         // ==========================================
         // ACTIVE WAITER (Giriş yapan garson)
