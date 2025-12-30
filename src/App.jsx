@@ -12,6 +12,7 @@ import TableOrder from './pages/TableOrder'
 import Kitchen from './pages/Kitchen'
 import Reservations from './pages/Reservations'
 import Analytics from './pages/Analytics'
+import Inventory from './pages/Inventory'
 import Settings from './pages/Settings'
 
 // Customer Pages
@@ -46,6 +47,7 @@ function App() {
                 <Route path="/kitchen" element={<Kitchen />} />
                 <Route path="/reservations" element={<Reservations />} />
                 <Route path="/analytics" element={<Analytics />} />
+                <Route path="/inventory" element={<Inventory />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
