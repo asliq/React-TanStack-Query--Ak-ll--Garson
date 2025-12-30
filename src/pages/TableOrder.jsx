@@ -11,7 +11,8 @@ import {
   Users,
   MapPin,
   Clock,
-  X
+  X,
+  Tag
 } from 'lucide-react'
 import { Card, CardContent } from '../components/ui/Card'
 import { Button, IconButton } from '../components/ui/Button'
@@ -19,6 +20,8 @@ import { Skeleton } from '../components/ui/Skeleton'
 import { useTable, useUpdateTableStatus } from '../hooks/useTables'
 import { useMenuWithCategories } from '../hooks/useMenu'
 import { useTableOrders, useCreateOrder } from '../hooks/useOrders'
+import { calculateDiscount } from '../hooks/useDiscounts'
+import DiscountManager from '../components/DiscountManager'
 import styles from './TableOrder.module.css'
 
 export default function TableOrder() {
@@ -28,6 +31,8 @@ export default function TableOrder() {
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [notes, setNotes] = useState({})
   const [showCart, setShowCart] = useState(false)
+  const [appliedDiscount, setAppliedDiscount] = useState(null)
+  const [showDiscountManager, setShowDiscountManager] = useState(false)
 
   // TanStack Query hooks
   const { data: table, isLoading: tableLoading } = useTable(parseInt(tableId))
@@ -95,9 +100,20 @@ export default function TableOrder() {
   }
 
   // Toplam hesapla
-  const cartTotal = useMemo(() => {
+  const cartSubtotal = useMemo(() => {
     return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   }, [cart])
+
+  // İndirim hesapla
+  const discountAmount = useMemo(() => {
+    if (!appliedDiscount) return 0
+    return calculateDiscount(appliedDiscount, cartSubtotal)
+  }, [appliedDiscount, cartSubtotal])
+
+  // Toplam (indirim sonrası)
+  const cartTotal = useMemo(() => {
+    return cartSubtotal - discountAmount
+  }, [cartSubtotal, discountAmount])
 
   // Toplam ürün sayısı
   const cartItemCount = useMemo(() => {
@@ -116,6 +132,9 @@ export default function TableOrder() {
         notes
       })),
       status: 'pending',
+      subtotal: cartSubtotal,
+      discountId: appliedDiscount?.id || null,
+      discountAmount: discountAmount,
       totalAmount: cartTotal
     }
 
@@ -325,9 +344,34 @@ export default function TableOrder() {
                   </div>
 
                   <div className={styles.cartFooter}>
-                    <div className={styles.cartTotal}>
-                      <span>Toplam</span>
-                      <span className={styles.totalAmount}>₺{cartTotal}</span>
+                    <div className={styles.cartSummary}>
+                      <div className={styles.summaryRow}>
+                        <span>Ara Toplam</span>
+                        <span>₺{cartSubtotal.toFixed(2)}</span>
+                      </div>
+                      
+                      {appliedDiscount ? (
+                        <div className={styles.summaryRow} style={{ color: '#22c55e' }}>
+                          <span>
+                            <Tag size={14} /> {appliedDiscount.name}
+                          </span>
+                          <span>-₺{discountAmount.toFixed(2)}</span>
+                        </div>
+                      ) : (
+                        <Button
+                          variant="secondary"
+                          size="small"
+                          icon={<Tag size={16} />}
+                          onClick={() => setShowDiscountManager(true)}
+                        >
+                          İndirim Uygula
+                        </Button>
+                      )}
+                      
+                      <div className={styles.cartTotal}>
+                        <span>Toplam</span>
+                        <span className={styles.totalAmount}>₺{cartTotal.toFixed(2)}</span>
+                      </div>
                     </div>
                     
                     <Button
@@ -374,6 +418,19 @@ export default function TableOrder() {
           <span className={styles.mobileTotal}>₺{cartTotal}</span>
         </motion.button>
       )}
+
+      {/* Discount Manager Modal */}
+      <AnimatePresence>
+        {showDiscountManager && (
+          <DiscountManager
+            onClose={() => setShowDiscountManager(false)}
+            onApplyDiscount={(discount) => {
+              setAppliedDiscount(discount)
+              setShowDiscountManager(false)
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }

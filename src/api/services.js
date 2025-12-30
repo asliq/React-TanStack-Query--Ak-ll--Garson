@@ -230,6 +230,44 @@ export const discountsApi = {
   },
 }
 
+// ==========================================
+// INVENTORY SERVİSLERİ
+// ==========================================
+export const inventoryApi = {
+  getAll: async () => {
+    const { data } = await axiosInstance.get('/inventory')
+    return data
+  },
+  
+  getLowStock: async () => {
+    const { data } = await axiosInstance.get('/inventory')
+    return data.filter(item => item.quantity <= item.minStock)
+  },
+  
+  create: async (item) => {
+    const { data } = await axiosInstance.post('/inventory', {
+      ...item,
+      id: `INV-${Date.now()}`,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    })
+    return data
+  },
+  
+  update: async (id, item) => {
+    const { data } = await axiosInstance.patch(`/inventory/${id}`, {
+      ...item,
+      updatedAt: new Date().toISOString()
+    })
+    return data
+  },
+  
+  delete: async (id) => {
+    await axiosInstance.delete(`/inventory/${id}`)
+    return id
+  },
+}
+
 export const api = {
   tables: tablesApi,
   categories: categoriesApi,
@@ -238,5 +276,6 @@ export const api = {
   waiters: waitersApi,
   stats: statsApi,
   discounts: discountsApi,
+  inventory: inventoryApi,
 }
 

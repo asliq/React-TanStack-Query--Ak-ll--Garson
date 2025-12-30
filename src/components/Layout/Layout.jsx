@@ -10,6 +10,7 @@ import {
   ChefHat,
   CalendarDays,
   BarChart3,
+  Package,
   LogOut,
   User,
   Wifi,
@@ -33,6 +34,7 @@ const secondaryNavItems = [
   { path: '/menu', icon: UtensilsCrossed, label: 'Menü Yönetimi' },
   { path: '/reservations', icon: CalendarDays, label: 'Rezervasyonlar', badge: 'reservations' },
   { path: '/analytics', icon: BarChart3, label: 'Raporlar' },
+  { path: '/inventory', icon: Package, label: 'Stok Yönetimi' },
 ]
 
 export default function Layout({ children }) {

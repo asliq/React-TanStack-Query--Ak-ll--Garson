@@ -1010,76 +1010,85 @@
   ],
   "inventory": [
     {
-      "id": "1",
+      "id": "INV-001",
       "name": "Dana Kıyma",
       "unit": "kg",
       "quantity": 25,
-      "minQuantity": 10,
+      "minStock": 10,
       "price": 280,
       "category": "Et"
     },
     {
-      "id": "2",
+      "id": "INV-002",
       "name": "Tavuk Göğsü",
       "unit": "kg",
       "quantity": 18,
-      "minQuantity": 8,
+      "minStock": 8,
       "price": 150,
       "category": "Et"
     },
     {
-      "id": "3",
+      "id": "INV-003",
       "name": "Kuzu Pirzola",
       "unit": "kg",
       "quantity": 8,
-      "minQuantity": 5,
+      "minStock": 5,
       "price": 450,
       "category": "Et"
     },
     {
-      "id": "4",
+      "id": "INV-004",
       "name": "Somon",
       "unit": "kg",
-      "quantity": 6,
-      "minQuantity": 4,
+      "quantity": 3,
+      "minStock": 4,
       "price": 380,
       "category": "Deniz Ürünü"
     },
     {
-      "id": "5",
+      "id": "INV-005",
       "name": "Mozzarella",
       "unit": "kg",
       "quantity": 12,
-      "minQuantity": 5,
+      "minStock": 5,
       "price": 220,
       "category": "Süt Ürünü"
     },
     {
-      "id": "6",
+      "id": "INV-006",
       "name": "Domates",
       "unit": "kg",
       "quantity": 30,
-      "minQuantity": 15,
+      "minStock": 15,
       "price": 25,
       "category": "Sebze"
     },
     {
-      "id": "7",
+      "id": "INV-007",
       "name": "Soğan",
       "unit": "kg",
       "quantity": 20,
-      "minQuantity": 10,
+      "minStock": 10,
       "price": 15,
       "category": "Sebze"
     },
     {
-      "id": "8",
+      "id": "INV-008",
       "name": "Zeytinyağı",
       "unit": "lt",
-      "quantity": 15,
-      "minQuantity": 8,
+      "quantity": 2,
+      "minStock": 8,
       "price": 180,
       "category": "Yağ"
+    },
+    {
+      "id": "INV-009",
+      "name": "Un",
+      "unit": "kg",
+      "quantity": 0,
+      "minStock": 20,
+      "price": 12,
+      "category": "Tahıl"
     }
   ],
   "discounts": [

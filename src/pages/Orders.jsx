@@ -9,11 +9,13 @@ import {
   XCircle,
   RefreshCw,
   Filter,
-  User
+  User,
+  Printer
 } from 'lucide-react'
 import { useOrders, useUpdateOrderStatus } from '../hooks/useOrders'
 import { useTables } from '../hooks/useTables'
 import { useMenuItems } from '../hooks/useMenu'
+import { printReceipt, printKitchenTicket, printOrderList } from '../utils/printUtils'
 import styles from './Orders.module.css'
 
 const statusConfig = {
@@ -195,9 +197,32 @@ export default function Orders() {
                       )}
                     </div>
                   </div>
-                  <div className={`${styles.orderStatus} ${styles[status.color]}`}>
-                    <StatusIcon size={16} />
-                    <span>{status.label}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <button
+                      className={styles.printBtn}
+                      onClick={() => {
+                        const table = tables?.find(t => t.id === order.tableId) || { number: order.tableId }
+                        const enrichedOrder = {
+                          ...order,
+                          items: order.items.map(item => {
+                            const menuItem = menuItems?.find(m => m.id === item.menuItemId)
+                            return {
+                              ...item,
+                              name: menuItem?.name || 'Ürün',
+                              price: menuItem?.price || 0
+                            }
+                          })
+                        }
+                        printReceipt(enrichedOrder, table, { name: 'Lezzet Durağı' })
+                      }}
+                      title="Fiş Yazdır"
+                    >
+                      <Printer size={16} />
+                    </button>
+                    <div className={`${styles.orderStatus} ${styles[status.color]}`}>
+                      <StatusIcon size={16} />
+                      <span>{status.label}</span>
+                    </div>
                   </div>
                 </div>
 
