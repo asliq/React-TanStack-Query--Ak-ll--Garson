@@ -184,6 +184,52 @@ export const statsApi = {
 // ==========================================
 // UNIFIED API EXPORT
 // ==========================================
+// ==========================================
+// DİSCOUNTS SERVİSLERİ
+// ==========================================
+export const discountsApi = {
+  getAll: async () => {
+    const { data } = await axiosInstance.get('/discounts')
+    return data
+  },
+  
+  getActive: async () => {
+    const { data } = await axiosInstance.get('/discounts')
+    const now = new Date()
+    return data.filter(discount => {
+      if (!discount.isActive) return false
+      const start = new Date(discount.startDate)
+      const end = new Date(discount.endDate)
+      return now >= start && now <= end
+    })
+  },
+  
+  getByCode: async (code) => {
+    const { data } = await axiosInstance.get(`/discounts?code=${code}`)
+    return data[0] || null
+  },
+  
+  create: async (discount) => {
+    const { data } = await axiosInstance.post('/discounts', {
+      ...discount,
+      id: `DISC-${Date.now()}`,
+      createdAt: new Date().toISOString(),
+      usedCount: 0
+    })
+    return data
+  },
+  
+  update: async (id, discount) => {
+    const { data } = await axiosInstance.patch(`/discounts/${id}`, discount)
+    return data
+  },
+  
+  delete: async (id) => {
+    await axiosInstance.delete(`/discounts/${id}`)
+    return id
+  },
+}
+
 export const api = {
   tables: tablesApi,
   categories: categoriesApi,
@@ -191,5 +237,6 @@ export const api = {
   orders: ordersApi,
   waiters: waitersApi,
   stats: statsApi,
+  discounts: discountsApi,
 }
 
