@@ -12,10 +12,15 @@
   
   --success: #16a34a;
   --success-light: #dcfce7;
+  --success-bg: #f0fdf4;
+  --success-subtle: #86efac;
   --warning: #ea580c;
   --warning-light: #ffedd5;
   --danger: #dc2626;
   --danger-light: #fee2e2;
+  --error: #ef4444;
+  --error-bg: #fef2f2;
+  --error-subtle: #fca5a5;
   --info: #0284c7;
   --info-light: #e0f2fe;
   
@@ -24,15 +29,19 @@
   --bg-page: #fafafa;
   --bg-card: #ffffff;
   --bg-hover: #f5f5f5;
+  --bg-secondary: #f9fafb;
+  --bg-primary: #ffffff;
   
   /* Text */
   --text-main: #18181b;
   --text-sub: #52525b;
   --text-muted: #a1a1aa;
+  --text-primary: #18181b;
   
   /* Borders */
   --border: #e4e4e7;
   --border-light: #f4f4f5;
+  --border-subtle: #e5e7eb;
   
   /* Shadows */
   --shadow: 0 1px 3px rgba(0,0,0,0.06);
@@ -57,14 +66,22 @@
   --bg-page: #0f0f0f;
   --bg-card: #1f1f1f;
   --bg-hover: #2a2a2a;
+  --bg-secondary: #1f1f1f;
+  --bg-primary: #1a1a1a;
   --text-main: #f5f5f5;
   --text-sub: #b0b0b0;
   --text-muted: #808080;
+  --text-primary: #f5f5f5;
   --border: #333333;
   --border-light: #262626;
+  --border-subtle: #404040;
   --shadow: 0 1px 3px rgba(0,0,0,0.4);
   --shadow-md: 0 4px 6px rgba(0,0,0,0.5);
   --shadow-lg: 0 10px 15px rgba(0,0,0,0.6);
+  --success-bg: #14532d;
+  --success-subtle: #16a34a;
+  --error-bg: #7f1d1d;
+  --error-subtle: #dc2626;
 }
 
 /* Reset */

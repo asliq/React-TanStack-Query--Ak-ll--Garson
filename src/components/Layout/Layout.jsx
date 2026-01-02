@@ -21,6 +21,7 @@ import { useActiveOrdersCount } from '../../hooks/useOrders'
 import { useCurrentUser, useLogout } from '../../hooks/useAuth'
 import { useTodayReservationsCount } from '../../hooks/useReservations'
 import { useNotifications, NotificationPanel } from '../NotificationProvider'
+import { WebSocketStatus } from '../WebSocketStatus'
 import styles from './Layout.module.css'
 
 const mainNavItems = [
@@ -97,6 +98,7 @@ export default function Layout({ children }) {
           <div className={`${styles.statusIndicator} ${isOnline ? styles.online : styles.offline}`}>
             <span>{isOnline ? 'Bağlı' : 'Çevrimdışı'}</span>
           </div>
+          <WebSocketStatus />
           <div className={styles.clock}>
             {currentTime.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
           </div>

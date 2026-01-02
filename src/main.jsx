@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { NotificationProvider } from './components/NotificationProvider'
 import { ThemeProvider } from './components/ThemeProvider'
+import { WebSocketProvider } from './components/WebSocketProvider'
 import App from './App.jsx'
 import './index.css'
 
@@ -36,9 +37,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <ThemeProvider>
-          <NotificationProvider>
-            <App />
-            <Toaster 
+          <WebSocketProvider>
+            <NotificationProvider>
+              <App />
+              <Toaster 
               position="bottom-right"
               toastOptions={{
                 duration: 3000,
@@ -51,7 +53,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 },
               }}
             />
-          </NotificationProvider>
+            </NotificationProvider>
+          </WebSocketProvider>
         </ThemeProvider>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
