@@ -83,3 +83,5 @@ export function IconButton({
   )
 }
 
+export default Button
+

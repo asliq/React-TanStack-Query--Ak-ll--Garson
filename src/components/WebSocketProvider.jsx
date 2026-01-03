@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { useWebSocket } from '@/hooks/useWebSocket';
+import { useWebSocket } from '../hooks/useWebSocket';
 
 /**
  * WebSocket Context Provider
