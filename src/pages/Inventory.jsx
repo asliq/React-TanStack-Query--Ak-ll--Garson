@@ -13,8 +13,8 @@ import {
   TrendingUp
 } from 'lucide-react'
 import { useInventory, useUpdateInventoryItem, useDeleteInventoryItem } from '../hooks/useInventory'
-import Card from '../components/ui/Card'
-import Button from '../components/ui/Button'
+import { Card } from '../components/ui/Card'
+import { Button } from '../components/ui/Button'
 import styles from './Inventory.module.css'
 
 export default function Inventory() {

@@ -14,8 +14,8 @@ import {
 } from 'lucide-react'
 import { useDiscounts, useCreateDiscount, useUpdateDiscount, useDeleteDiscount } from '../hooks/useDiscounts'
 import styles from './DiscountManager.module.css'
-import Button from './ui/Button'
-import Card from './ui/Card'
+import { Button } from './ui/Button'
+import { Card } from './ui/Card'
 
 export default function DiscountManager({ onClose, onApplyDiscount }) {
   const { data: discounts, isLoading } = useDiscounts()
