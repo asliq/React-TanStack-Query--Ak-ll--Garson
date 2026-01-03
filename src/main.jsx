@@ -7,6 +7,7 @@ import { Toaster } from 'react-hot-toast'
 import { NotificationProvider } from './components/NotificationProvider'
 import { ThemeProvider } from './components/ThemeProvider'
 import { WebSocketProvider } from './components/WebSocketProvider'
+import ErrorBoundary from './components/ErrorBoundary'
 import App from './App.jsx'
 import './index.css'
 
@@ -34,31 +35,33 @@ const queryClient = new QueryClient({
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <ThemeProvider>
-          <WebSocketProvider>
-            <NotificationProvider>
-              <App />
-              <Toaster 
-              position="bottom-right"
-              toastOptions={{
-                duration: 3000,
-                style: {
-                  background: 'var(--bg-secondary)',
-                  color: 'var(--text-primary)',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: '14px',
-                  boxShadow: 'var(--shadow-lg)',
-                },
-              }}
-            />
-            </NotificationProvider>
-          </WebSocketProvider>
-        </ThemeProvider>
-      </BrowserRouter>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <ThemeProvider>
+            <WebSocketProvider>
+              <NotificationProvider>
+                <App />
+                <Toaster 
+                position="bottom-right"
+                toastOptions={{
+                  duration: 3000,
+                  style: {
+                    background: 'var(--bg-secondary)',
+                    color: 'var(--text-primary)',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: '14px',
+                    boxShadow: 'var(--shadow-lg)',
+                  },
+                }}
+              />
+              </NotificationProvider>
+            </WebSocketProvider>
+          </ThemeProvider>
+        </BrowserRouter>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </ErrorBoundary>
   </React.StrictMode>,
 )
 

@@ -64,5 +64,3 @@ export function CardFooter({ children, className = '' }) {
   )
 }
 
-export default Card
-
