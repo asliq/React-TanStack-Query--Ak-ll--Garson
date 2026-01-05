@@ -18,13 +18,19 @@ import { Button } from '../components/ui/Button'
 import styles from './Inventory.module.css'
 
 export default function Inventory() {
-  const { data: inventory, isLoading } = useInventory()
+  const { data: inventory, isLoading, error } = useInventory()
   const updateMutation = useUpdateInventoryItem()
   const deleteMutation = useDeleteInventoryItem()
   
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all') // all, low, out
   const [showAddModal, setShowAddModal] = useState(false)
+
+  // Debug logs
+  console.log('Inventory Component Rendered')
+  console.log('Loading:', isLoading)
+  console.log('Error:', error)
+  console.log('Inventory Data:', inventory)
 
   const getStockStatus = (item) => {
     if (item.quantity === 0) return 'out'
