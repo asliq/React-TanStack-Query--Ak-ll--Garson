@@ -49,8 +49,9 @@ export default function Login() {
     <div className={styles.container}>
       {/* Animated Background */}
       <div className={styles.background}>
-        <div className={styles.gradient1} />
-        <div className={styles.gradient2} />
+        <div className={`${styles.blob} ${styles.blob1}`} />
+        <div className={`${styles.blob} ${styles.blob2}`} />
+        <div className={`${styles.blob} ${styles.blob3}`} />
         <div className={styles.pattern} />
       </div>
 
