@@ -1,7 +1,7 @@
-import { motion } from 'framer-motion'
-import styles from './Button.module.css'
+import { motion } from 'framer-motion' // framer-motion kütüphanesini import ediyoruz.
+import styles from './Button.module.css' // Button.module.css dosyasını import ediyoruz.
 
-export function Button({
+export function Button({ 
   children,
   variant = 'primary',
   size = 'medium',
